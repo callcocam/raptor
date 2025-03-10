@@ -4,6 +4,11 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor;
+namespace Callcocam\Raptor\Shinobi\Exceptions;
 
-class Raptor {}
+use Exception;
+
+class PermissionNotFoundException extends Exception
+{
+    // 
+}
