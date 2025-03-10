@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Callcocam\Raptor\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class RaptorCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'raptor';
 
     public $description = 'My command';
 
