@@ -6,7 +6,7 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Concerns;
+namespace Callcocam\Raptor\Core\Support\Concerns;
 
 use Closure;
 

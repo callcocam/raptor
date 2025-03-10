@@ -1,6 +1,6 @@
 <?php
 
-namespace Callcocam\Raptor\Support\Table\Actions;
+namespace Callcocam\Raptor\Core\Support\Table\Actions;
 
 class DeleteAction extends Action
 {

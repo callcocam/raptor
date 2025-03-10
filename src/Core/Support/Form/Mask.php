@@ -5,7 +5,7 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Form;
+namespace Callcocam\Raptor\Core\Support\Form;
 
 abstract class Mask extends Field
 {

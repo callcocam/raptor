@@ -5,7 +5,7 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Actions;
+namespace Callcocam\Raptor\Core\Support\Table\Actions;
 
 class EditAction extends Action
 {

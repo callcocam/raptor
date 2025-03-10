@@ -5,10 +5,10 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Columns;
+namespace Callcocam\Raptor\Core\Support\Table\Columns;
 
-use Callcocam\Raptor\Support\Concerns;
-use Callcocam\Raptor\Support\Table\Columns\Traits;
+use Callcocam\Raptor\Core\Support\Concerns;
+use Callcocam\Raptor\Core\Support\Table\Columns\Traits;
 
 class Column
 {

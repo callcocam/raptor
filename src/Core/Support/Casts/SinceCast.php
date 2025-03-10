@@ -6,7 +6,7 @@
  * https://www.sigasmart.com.br
  */
 
- namespace Callcocam\Raptor\Support\Casts;
+ namespace Callcocam\Raptor\Core\Support\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Carbon;

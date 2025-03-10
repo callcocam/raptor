@@ -4,7 +4,7 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor\Shinobi;
+namespace Callcocam\Raptor\Core\Shinobi;
 
 use Exception;
 use Illuminate\Support\Facades\Gate;
@@ -38,7 +38,7 @@ class ShinobiServiceProvider extends ServiceProvider
         $this->app->singleton('shinobi', function ($app) {
             $auth = $app->make('Illuminate\Contracts\Auth\Guard');
 
-            return new \Callcocam\Raptor\Shinobi\Shinobi($auth);
+            return new \Callcocam\Raptor\Core\Shinobi\Shinobi($auth);
         });
     }
 

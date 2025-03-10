@@ -7,7 +7,7 @@ and set your `default_tenant_columns` setting, if you have an app-wide default. 
 You'll need to set the service provider in your `bootstrap/app.php`:
 
 ```php
-$app->register(Callcocam\Raptor\Landlord\LandlordServiceProvider::class);
+$app->register(Callcocam\Raptor\Core\Landlord\LandlordServiceProvider::class);
 ```
 
 And make sure you've un-commented `$app->withEloquent()`.
@@ -76,7 +76,7 @@ To set up a model to be scoped automatically, simply use the `BelongsToTenants` 
 ```php
 
 use Illuminate\Database\Eloquent\Model;
-use Callcocam\Raptor\Landlord\BelongsToTenants;
+use Callcocam\Raptor\Core\Landlord\BelongsToTenants;
 
 class ExampleModel extends Model
 {
@@ -89,7 +89,7 @@ If you’d like to override the tenants that apply to a particular model, you ca
 ```php
 
 use Illuminate\Database\Eloquent\Model;
-use Callcocam\Raptor\Landlord\BelongsToTenants;
+use Callcocam\Raptor\Core\Landlord\BelongsToTenants;
 
 class ExampleModel extends Model
 {

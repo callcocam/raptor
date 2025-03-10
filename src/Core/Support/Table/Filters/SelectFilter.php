@@ -5,9 +5,9 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Filters;
+namespace Callcocam\Raptor\Core\Support\Table\Filters;
 
-use Callcocam\Raptor\Support\Concerns\BelongsToOptions;
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToOptions;
 use Illuminate\Database\Eloquent\Builder;
 
 class SelectFilter extends Filter

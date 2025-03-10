@@ -6,9 +6,9 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Landlord;
+namespace Callcocam\Raptor\Core\Landlord;
 
-use Callcocam\Raptor\Facades\Tenant;
+use Callcocam\Raptor\Core\Facades\Tenant;
 use App\Models\Tenant as ModelsTenant;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;

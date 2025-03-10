@@ -5,12 +5,12 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Actions\Bulk;
+namespace Callcocam\Raptor\Core\Support\Table\Actions\Bulk;
 
-use Callcocam\Raptor\Support\Concerns\BelongsToLabel;
-use Callcocam\Raptor\Support\Concerns\BelongsToIcon;
-use Callcocam\Raptor\Support\Concerns\BelongsToVariant; 
-use Callcocam\Raptor\Support\Concerns\BelongsToUrl;
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToLabel;
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToIcon;
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToVariant; 
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToUrl;
 use Closure;
 
 class BulkAction

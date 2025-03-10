@@ -7,9 +7,9 @@
  * 
  */
 
-namespace Callcocam\Raptor\Support\Form;
+namespace Callcocam\Raptor\Core\Support\Form;
 
-use Callcocam\Raptor\Support\Concerns;
+use Callcocam\Raptor\Core\Support\Concerns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 

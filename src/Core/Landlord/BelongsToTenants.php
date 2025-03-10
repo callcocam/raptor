@@ -6,9 +6,9 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Landlord;
+namespace Callcocam\Raptor\Core\Landlord;
 
-use Callcocam\Raptor\Landlord\Exceptions\ModelNotFoundForTenantException;
+use Callcocam\Raptor\Core\Landlord\Exceptions\ModelNotFoundForTenantException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 

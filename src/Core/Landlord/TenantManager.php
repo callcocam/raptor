@@ -6,10 +6,10 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Landlord;
+namespace Callcocam\Raptor\Core\Landlord;
 
-use Callcocam\Raptor\Landlord\Exceptions\TenantColumnUnknownException;
-use Callcocam\Raptor\Landlord\Exceptions\TenantNullIdException;
+use Callcocam\Raptor\Core\Landlord\Exceptions\TenantColumnUnknownException;
+use Callcocam\Raptor\Core\Landlord\Exceptions\TenantNullIdException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

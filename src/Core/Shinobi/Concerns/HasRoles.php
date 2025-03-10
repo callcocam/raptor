@@ -4,11 +4,11 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor\Shinobi\Concerns;
+namespace Callcocam\Raptor\Core\Shinobi\Concerns;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Callcocam\Raptor\Shinobi\Contracts\Role;
+use Callcocam\Raptor\Core\Shinobi\Contracts\Role;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 trait HasRoles
@@ -163,7 +163,7 @@ trait HasRoles
     /**
      * Get the model instance responsible for permissions.
      * 
-     * @return \Callcocam\Raptor\Shinobi\Contracts\Role
+     * @return \Callcocam\Raptor\Core\Shinobi\Contracts\Role
      */
     protected function getRoleModel(): Role
     {

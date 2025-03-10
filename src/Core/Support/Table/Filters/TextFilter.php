@@ -5,7 +5,7 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Filters;
+namespace Callcocam\Raptor\Core\Support\Table\Filters;
  
 
 class TextFilter extends Filter

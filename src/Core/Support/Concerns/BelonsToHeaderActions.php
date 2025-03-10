@@ -6,9 +6,9 @@
  * 
  */
 
-namespace Callcocam\Raptor\Support\Concerns;
+namespace Callcocam\Raptor\Core\Support\Concerns;
 
- use Callcocam\Raptor\Support\Actions\HeaderAction;
+ use Callcocam\Raptor\Core\Support\Actions\HeaderAction;
 
 trait BelonsToHeaderActions
 {

@@ -6,7 +6,7 @@
  * 
  * */
 
-namespace Callcocam\Raptor\Support\Form;
+namespace Callcocam\Raptor\Core\Support\Form;
 
 
 class Section extends Sections

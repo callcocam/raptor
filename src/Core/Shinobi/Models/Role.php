@@ -4,12 +4,12 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor\Shinobi\Models;
+namespace Callcocam\Raptor\Core\Shinobi\Models;
 
-use Callcocam\Raptor\Models\AbstractModel;
 use Illuminate\Database\Eloquent\Model;
-use Callcocam\Raptor\Shinobi\Concerns\HasPermissions;
-use Callcocam\Raptor\Shinobi\Contracts\Role as RoleContract; 
+use Callcocam\Raptor\Core\Shinobi\Concerns\HasPermissions;
+use Callcocam\Raptor\Core\Shinobi\Contracts\Role as RoleContract;
+use App\Models\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends AbstractModel implements RoleContract

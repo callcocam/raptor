@@ -4,13 +4,13 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor\Shinobi\Concerns;
+namespace Callcocam\Raptor\Core\Shinobi\Concerns;
 
 use Illuminate\Support\Arr;
-use Callcocam\Raptor\Shinobi\Facades\Shinobi;
-use Callcocam\Raptor\Shinobi\Contracts\Permission;
+use Callcocam\Raptor\Core\Shinobi\Facades\Shinobi;
+use Callcocam\Raptor\Core\Shinobi\Contracts\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Callcocam\Raptor\Shinobi\Exceptions\PermissionNotFoundException;
+use Callcocam\Raptor\Core\Shinobi\Exceptions\PermissionNotFoundException;
 
 trait HasPermissions
 {
@@ -141,7 +141,7 @@ trait HasPermissions
     /**
      * Checks if the user has the given permission assigned.
      * 
-     * @param  \Callcocam\Raptor\Shinobi\Models\Permission  $permission
+     * @param  \Callcocam\Raptor\Core\Shinobi\Models\Permission  $permission
      * @return boolean
      */
     protected function hasPermission($permission): bool
@@ -158,7 +158,7 @@ trait HasPermissions
     /**
      * Get the model instance responsible for permissions.
      * 
-     * @return \Callcocam\Raptor\Shinobi\Contracts\Permission|\Illuminate\Database\Eloquent\Collection
+     * @return \Callcocam\Raptor\Core\Shinobi\Contracts\Permission|\Illuminate\Database\Eloquent\Collection
      */
     protected function getPermissionModel()
     {

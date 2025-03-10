@@ -5,7 +5,7 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Concerns\Sluggable;
+namespace Callcocam\Raptor\Core\Concerns\Sluggable;
  
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;

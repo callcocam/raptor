@@ -6,9 +6,9 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Traits;
+namespace Callcocam\Raptor\Core\Support\Table\Traits;
 
-use Callcocam\Raptor\Support\Table\Actions\Bulk\BulkAction;
+use Callcocam\Raptor\Core\Support\Table\Actions\Bulk\BulkAction;
 
 trait HasBulkActions
 {

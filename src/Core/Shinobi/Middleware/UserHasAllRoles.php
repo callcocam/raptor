@@ -4,7 +4,7 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor\Shinobi\Middleware;
+namespace Callcocam\Raptor\Core\Shinobi\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Guard;

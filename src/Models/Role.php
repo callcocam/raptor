@@ -7,7 +7,7 @@
 
 namespace Callcocam\Raptor\Models;
 
-use App\Models\User;
+use Callcocam\Raptor\Models\User;
 use Callcocam\Raptor\Models\Traits\HasTenant;
 use Callcocam\Raptor\Enums\DefaultStatus;
 use Callcocam\Raptor\Shinobi\Models\Role as ModelsRole;

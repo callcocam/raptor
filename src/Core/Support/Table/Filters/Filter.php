@@ -5,9 +5,9 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Filters;
+namespace Callcocam\Raptor\Core\Support\Table\Filters;
 
-use Callcocam\Raptor\Support\Concerns;
+use Callcocam\Raptor\Core\Support\Concerns;
 use Illuminate\Database\Eloquent\Builder;
 
 abstract class Filter

@@ -6,12 +6,12 @@
  * 
  * */
 
-namespace Callcocam\Raptor\Support\Form;
+namespace Callcocam\Raptor\Core\Support\Form;
 
-use Callcocam\Raptor\Support\Concerns;
-use Callcocam\Raptor\Support\Form\Traits\HasGridLayout;
-use Callcocam\Raptor\Support\Form\Traits\HasRecord;
-use Callcocam\Raptor\Support\Form\Traits\HasRelationship;
+use Callcocam\Raptor\Core\Support\Concerns;
+use Callcocam\Raptor\Core\Support\Form\Traits\HasGridLayout;
+use Callcocam\Raptor\Core\Support\Form\Traits\HasRecord;
+use Callcocam\Raptor\Core\Support\Form\Traits\HasRelationship;
 
 class Sections
 {

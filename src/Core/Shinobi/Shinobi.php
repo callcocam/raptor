@@ -4,11 +4,11 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor\Shinobi;
+namespace Callcocam\Raptor\Core\Shinobi;
 
-use Callcocam\Raptor\Shinobi\Tactics\AssignRoleTo;
-use Callcocam\Raptor\Shinobi\Tactics\GivePermissionTo;
-use Callcocam\Raptor\Shinobi\Tactics\RevokePermissionFrom;
+use Callcocam\Raptor\Core\Shinobi\Tactics\AssignRoleTo;
+use Callcocam\Raptor\Core\Shinobi\Tactics\GivePermissionTo;
+use Callcocam\Raptor\Core\Shinobi\Tactics\RevokePermissionFrom;
 
 class Shinobi
 {
@@ -36,7 +36,7 @@ class Shinobi
      * Assign roles to a user.
      * 
      * @param  string|array  $roles
-     * @return \Callcocam\Raptor\Shinobi\Tactic\AssignRoleTo
+     * @return \Callcocam\Raptor\Core\Shinobi\Tactic\AssignRoleTo
      */
     public function assign($roles): AssignRoleTo
     {
@@ -47,7 +47,7 @@ class Shinobi
      * Give permissions to a user or role
      * 
      * @param  string|array  $permissions
-     * @return \Callcocam\Raptor\Shinobi\Tactic\GivePermissionTo
+     * @return \Callcocam\Raptor\Core\Shinobi\Tactic\GivePermissionTo
      */
     public function give($permissions): GivePermissionTo
     {
@@ -58,7 +58,7 @@ class Shinobi
      * Revoke permissions from a user or role
      * 
      * @param  string|array  $permissions
-     * @return \Callcocam\Raptor\Shinobi\Tactic\RevokePermissionFrom
+     * @return \Callcocam\Raptor\Core\Shinobi\Tactic\RevokePermissionFrom
      */
     public function revoke($permissions): RevokePermissionFrom
     {

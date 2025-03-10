@@ -5,10 +5,10 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Form;
+namespace Callcocam\Raptor\Core\Support\Form;
 
-use Callcocam\Raptor\Support\Concerns;
-use Callcocam\Raptor\Support\Form\Traits;
+use Callcocam\Raptor\Core\Support\Concerns;
+use Callcocam\Raptor\Core\Support\Form\Traits;
 
 abstract class Field
 {

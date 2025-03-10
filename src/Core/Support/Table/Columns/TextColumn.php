@@ -4,7 +4,7 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor\Support\Table\Columns;
+namespace Callcocam\Raptor\Core\Support\Table\Columns;
 
 class TextColumn extends Column
 {

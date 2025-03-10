@@ -5,7 +5,7 @@
  * https://www.sigasmart.com.br
  * 
 */
-namespace Callcocam\Raptor\Support\Form\Traits;
+namespace Callcocam\Raptor\Core\Support\Form\Traits;
 
 trait HasGridLayout
 {

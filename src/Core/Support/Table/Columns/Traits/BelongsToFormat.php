@@ -5,7 +5,7 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Columns\Traits;
+namespace Callcocam\Raptor\Core\Support\Table\Columns\Traits;
 
 use Closure;
 

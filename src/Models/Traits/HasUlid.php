@@ -4,7 +4,7 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace App\Models\Traits;
+namespace Callcocam\Raptor\Models\Traits;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;

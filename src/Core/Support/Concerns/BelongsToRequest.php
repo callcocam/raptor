@@ -7,7 +7,7 @@
  * 
  */
 
-namespace Callcocam\Raptor\Support\Concerns;
+namespace Callcocam\Raptor\Core\Support\Concerns;
 
 use Illuminate\Http\Request;
 

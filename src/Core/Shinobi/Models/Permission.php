@@ -4,13 +4,13 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor\Shinobi\Models;
+namespace Callcocam\Raptor\Core\Shinobi\Models;
 
-use Callcocam\Raptor\Models\AbstractModel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Callcocam\Raptor\Shinobi\Concerns\RefreshesPermissionCache;
-use Callcocam\Raptor\Shinobi\Contracts\Permission as PermissionContract; 
+use Callcocam\Raptor\Core\Shinobi\Concerns\RefreshesPermissionCache;
+use Callcocam\Raptor\Core\Shinobi\Contracts\Permission as PermissionContract;
+use App\Models\AbstractModel;
 
 class Permission extends AbstractModel implements PermissionContract
 {

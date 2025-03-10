@@ -5,7 +5,7 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table;
+namespace Callcocam\Raptor\Core\Support\Table;
 
 class RowAction
 {

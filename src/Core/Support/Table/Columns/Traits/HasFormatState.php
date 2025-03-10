@@ -6,10 +6,10 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Columns\Traits;
+namespace Callcocam\Raptor\Core\Support\Table\Columns\Traits;
 
-use Callcocam\Raptor\Support\Casts\DateCast;
-use Callcocam\Raptor\Support\Casts\SinceCast;
+use Callcocam\Raptor\Core\Support\Casts\DateCast;
+use Callcocam\Raptor\Core\Support\Casts\SinceCast;
 use Closure;
 
 /**

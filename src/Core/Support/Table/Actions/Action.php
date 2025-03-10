@@ -5,13 +5,13 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Actions;
+namespace Callcocam\Raptor\Core\Support\Table\Actions;
 
-use Callcocam\Raptor\Support\Concerns\BelongsToIcon;
-use Callcocam\Raptor\Support\Concerns\BelongsToLabel;
-use Callcocam\Raptor\Support\Concerns\BelongsToName; 
-use Callcocam\Raptor\Support\Concerns\BelongsToVariant;
-use Callcocam\Raptor\Support\Concerns\BelongsToUrl;
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToIcon;
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToLabel;
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToName; 
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToVariant;
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToUrl;
 use Closure;
 
 class Action

@@ -4,9 +4,9 @@
 * User: callcocam@gmail.com, contato@sigasmart.com.br
 * https://www.sigasmart.com.br
 */
-namespace Callcocam\Raptor\Landlord\Facades;
+namespace Callcocam\Raptor\Core\Landlord\Facades;
 
-use Callcocam\Raptor\Landlord\TenantManager;
+use Callcocam\Raptor\Core\Landlord\TenantManager;
 use Illuminate\Support\Facades\Facade;
 
 class Landlord extends Facade

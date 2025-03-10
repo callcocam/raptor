@@ -7,7 +7,7 @@
 
 namespace Callcocam\Raptor\Models;
 
-use App\Models\User;
+use Callcocam\Raptor\Models\User;
 use Callcocam\Raptor\Enums\TenantStatus;
 use Callcocam\Raptor\Models\Traits\HasAddresses;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;

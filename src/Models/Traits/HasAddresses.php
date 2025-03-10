@@ -7,7 +7,7 @@
 
 namespace Callcocam\Raptor\Models\Traits;
 
-use App\Models\Address;
+use Callcocam\Raptor\Models\Address;
 
 trait HasAddresses
 {

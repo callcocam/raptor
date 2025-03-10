@@ -4,7 +4,7 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor\Shinobi\Contracts;
+namespace Callcocam\Raptor\Core\Shinobi\Contracts;
 
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 

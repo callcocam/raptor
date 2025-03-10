@@ -6,7 +6,7 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Shinobi\Concerns;
+namespace Callcocam\Raptor\Core\Shinobi\Concerns;
 
 trait HasRolesAndPermissions
 {
@@ -16,7 +16,7 @@ trait HasRolesAndPermissions
      * Run through the roles assigned to the permission and
      * checks if the user has any of them assigned.
      * 
-     * @param  \Callcocam\Raptor\Shinobi\Models\Permission  $permission
+     * @param  \Callcocam\Raptor\Core\Shinobi\Models\Permission  $permission
      * @return boolean
      */
     protected function hasPermissionThroughRole($permission): bool

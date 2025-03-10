@@ -5,7 +5,7 @@
  * https://www.sigasmart.com.br
  * 
  */
-namespace Callcocam\Raptor\Support\Info\Traits;
+namespace Callcocam\Raptor\Core\Support\Info\Traits;
 
 trait HasProps
 {

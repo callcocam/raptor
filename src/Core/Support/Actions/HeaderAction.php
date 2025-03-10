@@ -6,11 +6,11 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Actions;
+namespace Callcocam\Raptor\Core\Support\Actions;
 
-use Callcocam\Raptor\Support\Concerns\BelongsToIcon;
-use Callcocam\Raptor\Support\Concerns\BelongsToLabel;
-use Callcocam\Raptor\Support\Concerns\EvaluatesClosures;
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToIcon;
+use Callcocam\Raptor\Core\Support\Concerns\BelongsToLabel;
+use Callcocam\Raptor\Core\Support\Concerns\EvaluatesClosures;
 
 class HeaderAction
 {

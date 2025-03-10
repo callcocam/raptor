@@ -5,9 +5,9 @@
  * https://www.sigasmart.com.br
  */
 
-namespace Callcocam\Raptor\Support\Table\Traits;
+namespace Callcocam\Raptor\Core\Support\Table\Traits;
 
-use Callcocam\Raptor\Support\Table\RowAction;
+use Callcocam\Raptor\Core\Support\Table\RowAction;
 use Closure;
 
 trait HasRowActions

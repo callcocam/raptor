@@ -4,11 +4,11 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
-namespace Callcocam\Raptor\Shinobi\Tactics;
+namespace Callcocam\Raptor\Core\Shinobi\Tactics;
 
 use Illuminate\Support\Arr;
 use Illuminate\Database\Eloquent\Model;
-use Callcocam\Raptor\Shinobi\Facades\Shinobi;
+use Callcocam\Raptor\Core\Shinobi\Facades\Shinobi;
 
 class GivePermissionTo
 {

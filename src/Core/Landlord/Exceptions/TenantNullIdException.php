@@ -4,7 +4,7 @@
 * User: callcocam@gmail.com, contato@sigasmart.com.br
 * https://www.sigasmart.com.br
 */
-namespace Callcocam\Raptor\Landlord\Exceptions;
+namespace Callcocam\Raptor\Core\Landlord\Exceptions;
 
 use Exception;
 

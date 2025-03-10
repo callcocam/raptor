@@ -6,9 +6,9 @@
  * 
  * */
 
-namespace Callcocam\Raptor\Support\Form\Fields;
+namespace Callcocam\Raptor\Core\Support\Form\Fields;
 
-use Callcocam\Raptor\Support\Form\Field;
+use Callcocam\Raptor\Core\Support\Form\Field;
 
 class TagsInput extends Field
 {
