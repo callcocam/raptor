@@ -1,13 +1,13 @@
 <?php
-
 /**
  * Created by Claudio Campos.
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
 
-namespace App\Http\Controllers;
-  
+namespace Callcocam\Raptor\Http\Controllers;
+
+use App\Http\Controllers\Controller;
 use Callcocam\Raptor\Contracts\NavigationGroupInterface;
 use Callcocam\Raptor\Enums\DefaultStatus;
 use Callcocam\Raptor\Services\RaptorService;
