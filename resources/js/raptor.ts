@@ -1,8 +1,10 @@
 import type { App } from 'vue' 
 import Raptor from './Raptor.vue';
 
-import RaptorTable from './components/table';
-import RaptorForm from './components/form';
+import Table from './components/table';
+import Form from './components/form';
+import RaptorForm from './components/RaptorForm.vue';
+import RaptorTable from './components/RaptorTable.vue';
 
 interface PluginOptions {
   [key: string]: any
@@ -16,9 +18,13 @@ const install = (app: App, options: PluginOptions = {}) => {
   const componentRegistry: string[] = [];
     app.component('Raptor', Raptor); 
     app.component('v-raptor', Raptor);
+    app.component('RaptorForm', RaptorForm);
+    app.component('v-raptor-form', RaptorForm);
+    app.component('RaptorTable', RaptorTable);
+    app.component('v-raptor-table', RaptorTable);
 
-    app.use(RaptorTable);
-    app.use(RaptorForm);
+    app.use(Table);
+    app.use(Form);
 
 //   Object.entries(import.meta.glob<ComponentModule>('./fields/**/*.vue', { eager: true }))
 //     .forEach(([path, definition]) => {

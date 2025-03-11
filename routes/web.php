@@ -8,7 +8,7 @@ use Callcocam\Raptor\Facades\Raptor;
 use Illuminate\Support\Facades\Route; 
 Route::group([
     'middleware' => ['web', 'auth'],
-    'prefix' => Raptor::path(),
+    // 'prefix' => Raptor::path(),
     // 'as' => 'raptor.',
     'namespace' => Raptor::getNamespace('Http\Controllers'),
 ], function () {
