@@ -13,7 +13,7 @@ return new class extends Migration
 {
     public function up()
     {
-        $name = config('shinobi.tables.roles');
+        $name = config('raptor.tables.roles', 'roles');
 
         Schema::create($name, function (Blueprint $table) {
             $table->ulid('id')->primary();
@@ -30,6 +30,7 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('roles');
+        $name = config('raptor.tables.roles', 'roles');
+        Schema::dropIfExists($name);
     }
 };

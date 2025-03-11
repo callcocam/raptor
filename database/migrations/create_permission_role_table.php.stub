@@ -12,7 +12,7 @@ return new class extends Migration
 {
     public function up()
     {
-        $name = config('shinobi.tables.permission_role');
+        $name = config('raptor.tables.permission_role', 'permission_role');
 
         Schema::create($name, function (Blueprint $table) {
             $table->foreignUlid('permission_id')->constrained()->onDelete('cascade');
@@ -24,6 +24,7 @@ return new class extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('permission_role');
+        $name = config('raptor.tables.permission_role', 'permission_role');
+        Schema::dropIfExists($name);
     }
 };

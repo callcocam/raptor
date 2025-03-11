@@ -37,6 +37,7 @@ class RaptorServiceProvider extends PackageServiceProvider
                 'create_role_user_table',
                 'create_permission_user_table',
                 'create_aborts_table',
+                'alter_users_table',
             )
             ->hasCommand(RaptorCommand::class)
             ->hasInstallCommand(function (InstallCommand $command) {

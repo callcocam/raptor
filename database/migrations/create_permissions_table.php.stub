@@ -13,7 +13,7 @@ return new class extends Migration
 {
     public function up()
     {
-        $name = config('shinobi.tables.permissions');
+        $name = config('raptor.tables.permissions', 'permissions');
 
         Schema::create($name, function (Blueprint $table) {
             $table->ulid('id')->primary();
@@ -28,7 +28,8 @@ return new class extends Migration
     }
 
     public function down()
-    {
-        Schema::dropIfExists('permissions');
+    {   
+        $name = config('raptor.tables.permissions', 'permissions');
+        Schema::dropIfExists($name);
     }
 };
