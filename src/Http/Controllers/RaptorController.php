@@ -115,6 +115,7 @@ abstract class RaptorController extends Controller implements NavigationGroupInt
 
     public function index(Request $request)
     {
+        
         return Inertia::render($this->getView('Index'),  $this->table(Table::make($request))
             ->route($request->route()->getName())
             ->resource($this->resource)

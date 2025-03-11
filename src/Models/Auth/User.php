@@ -7,6 +7,7 @@
 
 namespace Callcocam\Raptor\Models\Auth;
 
+use Callcocam\Raptor\Core\Shinobi\Concerns\HasRolesAndPermissions;
 use Callcocam\Raptor\Models\AbstractModel;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\MustVerifyEmail;
@@ -21,5 +22,5 @@ class User extends AbstractModel implements
     AuthorizableContract,
     CanResetPasswordContract
 {
-    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail;
+    use Authenticatable, Authorizable, CanResetPassword, MustVerifyEmail, HasRolesAndPermissions;
 }
