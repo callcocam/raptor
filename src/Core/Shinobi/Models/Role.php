@@ -9,7 +9,7 @@ namespace Callcocam\Raptor\Core\Shinobi\Models;
 use Illuminate\Database\Eloquent\Model;
 use Callcocam\Raptor\Core\Shinobi\Concerns\HasPermissions;
 use Callcocam\Raptor\Core\Shinobi\Contracts\Role as RoleContract;
-use App\Models\AbstractModel;
+use Callcocam\Raptor\Models\AbstractModel;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends AbstractModel implements RoleContract

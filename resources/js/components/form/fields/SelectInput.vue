@@ -16,7 +16,7 @@
     </SCFormField>
 </template>
 <script setup lang="ts">
-import SCFormField from '@/components/core/form/SCFormField.vue';
+import SCFormField from './../SCFormField.vue';
 import {
     Select,
     SelectContent,

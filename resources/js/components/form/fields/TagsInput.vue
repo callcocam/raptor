@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed, onMounted } from 'vue';
-import SCFormField from '@/components/core/form/SCFormField.vue';
+import SCFormField from './../SCFormField.vue';
 import Icon from '@/components/Icon.vue';
 import { FormField } from '../types';
 

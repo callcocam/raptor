@@ -30,10 +30,9 @@ const install = (app: App, options: PluginOptions = {}) => {
   Object.entries(import.meta.glob<ComponentModule>('./fields/**/*.vue', { eager: true }))
     .forEach(([path, definition]) => {
       const originalName = path.split('/').pop()?.replace(/\.\w+$/, '') || '';
-      console.log(originalName);
       //Criar nome do componente em kebab-case
       const kebabName = originalName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-      console.log(('sc-').concat(kebabName));
+      //Verificar se o componente já foi registrado
       if (componentRegistry.indexOf(originalName) === -1) {
         app.component(('sc-').concat(kebabName), definition.default);
         app.component(originalName, definition.default);

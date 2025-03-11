@@ -50,7 +50,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { Link, useForm } from '@inertiajs/vue3';
-import { useGridClasses } from '@/composables/useGridClasses'
+import { useGridClasses } from './../../composables/useGridClasses'
 import { Form } from '@/components/ui/form';
 import {
     Card,

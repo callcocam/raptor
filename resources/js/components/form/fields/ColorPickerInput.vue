@@ -6,7 +6,7 @@
     </SCFormField>
 </template>
 <script setup lang="ts">
-import SCFormField from '@/components/core/form/SCFormField.vue';
+import SCFormField from './../SCFormField.vue';
 import { Input } from '@/components/ui/input';
 import { FormField } from '../types';
 

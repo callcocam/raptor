@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Callcocam\Raptor\Core\Shinobi\Concerns\RefreshesPermissionCache;
 use Callcocam\Raptor\Core\Shinobi\Contracts\Permission as PermissionContract;
-use App\Models\AbstractModel;
+use Callcocam\Raptor\Models\AbstractModel;
 
 class Permission extends AbstractModel implements PermissionContract
 {

@@ -7,10 +7,10 @@
 
 namespace Callcocam\Raptor\Models;
 
-use Callcocam\Raptor\Models\User;
+use App\Models\User;
+use Callcocam\Raptor\Core\Shinobi\Models\Role as ModelsRole; 
 use Callcocam\Raptor\Models\Traits\HasTenant;
-use Callcocam\Raptor\Enums\DefaultStatus;
-use Callcocam\Raptor\Shinobi\Models\Role as ModelsRole;
+use Callcocam\Raptor\Enums\DefaultStatus; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

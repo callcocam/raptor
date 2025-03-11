@@ -4,7 +4,7 @@
     </SCFormField>
 </template>
 <script setup lang="ts">
-import SCFormField from '@/components/core/form/SCFormField.vue';
+import SCFormField from './../SCFormField.vue';
 import { FormField } from '../types';
 import { Switch } from '@/components/ui/switch';
 import { watch } from 'vue';

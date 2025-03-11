@@ -7,7 +7,7 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useGridClasses } from '@/composables/useGridClasses'
+import { useGridClasses } from './../../composables/useGridClasses'
 import { FormSection } from './types';
 
 const props = defineProps<{

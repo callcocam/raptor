@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted, watch } from 'vue';
-import { useGridClasses } from '@/composables/useGridClasses';
+import { useGridClasses } from './../../composables/useGridClasses';
 import Icon from '@/components/Icon.vue';
 
 const props = defineProps<{

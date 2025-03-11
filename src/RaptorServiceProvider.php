@@ -11,6 +11,7 @@ namespace Callcocam\Raptor;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Callcocam\Raptor\Commands\RaptorCommand;
+use Spatie\LaravelPackageTools\Commands\InstallCommand;
 
 class RaptorServiceProvider extends PackageServiceProvider
 {
@@ -28,7 +29,7 @@ class RaptorServiceProvider extends PackageServiceProvider
             ->hasRoutes('web', 'api')
             ->hasTranslations()
             ->hasMigrations(
-                'create_tenant_table',
+                'create_tenants_table',
                 'create_addresses_table',
                 'create_roles_table',
                 'create_permissions_table',
@@ -37,7 +38,17 @@ class RaptorServiceProvider extends PackageServiceProvider
                 'create_permission_user_table',
                 'create_aborts_table',
             )
-            ->hasCommand(RaptorCommand::class);
+            ->hasCommand(RaptorCommand::class)
+            ->hasInstallCommand(function (InstallCommand $command) {
+                $command
+                    ->publishConfigFile()
+                    ->publishAssets()
+                    ->publishMigrations()
+                    ->publish('raptor:translations')
+                    ->askToRunMigrations()
+                    ->copyAndRegisterServiceProviderInApp()
+                    ->askToStarRepoOnGitHub('callcocam/raptor');
+            });
     }
 
     public function packageBooted()

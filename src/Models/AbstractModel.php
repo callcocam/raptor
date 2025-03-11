@@ -7,9 +7,9 @@
 
 namespace Callcocam\Raptor\Models;
 
-use Callcocam\Raptor\Models\User;
-use Callcocam\Raptor\Concerns\Sluggable\HasSlug;
-use Callcocam\Raptor\Concerns\Sluggable\SlugOptions;
+use App\Models\User;
+use Callcocam\Raptor\Core\Concerns\Sluggable\HasSlug;
+use Callcocam\Raptor\Core\Concerns\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 

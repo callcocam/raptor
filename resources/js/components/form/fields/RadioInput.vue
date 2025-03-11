@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import SCFormField from '@/components/core/form/SCFormField.vue';
+import SCFormField from './../SCFormField.vue';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
     FormItem,

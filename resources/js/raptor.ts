@@ -1,6 +1,9 @@
 import type { App } from 'vue' 
 import Raptor from './Raptor.vue';
 
+import RaptorTable from './components/table';
+import RaptorForm from './components/form';
+
 interface PluginOptions {
   [key: string]: any
 }
@@ -13,6 +16,9 @@ const install = (app: App, options: PluginOptions = {}) => {
   const componentRegistry: string[] = [];
     app.component('Raptor', Raptor); 
     app.component('v-raptor', Raptor);
+
+    app.use(RaptorTable);
+    app.use(RaptorForm);
 
 //   Object.entries(import.meta.glob<ComponentModule>('./fields/**/*.vue', { eager: true }))
 //     .forEach(([path, definition]) => {

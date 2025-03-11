@@ -6,9 +6,9 @@
  */
 
 namespace Callcocam\Raptor\Models;
- 
-use Callcocam\Raptor\Enums\DefaultStatus as EnumsDefaultStatus;
-use Callcocam\Raptor\Shinobi\Models\Permission as ModelsPermission;
+
+use Callcocam\Raptor\Core\Shinobi\Models\Permission as ModelsPermission;
+use Callcocam\Raptor\Enums\DefaultStatus as EnumsDefaultStatus; 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

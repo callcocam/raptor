@@ -1,0 +1,15 @@
+{
+    "users": "usuarios",
+    "user": "usuario",
+    "tenants": "inquilinos",
+    "tenant": "inquilino",
+    "roles": "roles",
+    "role": "role",
+    "permissions": "permissoes",
+    "permission": "permissao",
+    "profile": "perfil",
+    "profiles": "perfis",
+    "settings": "configuracoes",
+    "setting": "configuracao",
+    "dashboard": "painel"
+}

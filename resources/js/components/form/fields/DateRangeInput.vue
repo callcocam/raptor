@@ -34,7 +34,7 @@ import type { DateRange } from 'reka-ui'
 import { cn } from '@/lib/utils'
 import { RangeCalendar } from '@/components/ui/range-calendar'
 import { Button } from '@/components/ui/button'
-import SCFormField from '@/components/core/form/SCFormField.vue';
+import SCFormField from './../SCFormField.vue';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { FormField } from '../types';
 import {
