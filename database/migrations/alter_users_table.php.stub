@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Callcocam\Raptor\Enums\DefaultStatus;
 
 return new class extends Migration
 {
@@ -12,13 +13,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->ulid('id')->primary()->change(); 
+            $table->ulid('id') ->change(); 
+            $table->enum('status', array_column(DefaultStatus::cases(), 'value'))->default(DefaultStatus::DRAFT->value)->after('password');
             $table->softDeletes()->after('updated_at');
         });
  
 
         Schema::table('sessions', function (Blueprint $table) { 
-            $table->foreignUlid('user_id')->nullable()->index(); 
+            $table->foreignUlid('user_id')->change();
         });
     }
 

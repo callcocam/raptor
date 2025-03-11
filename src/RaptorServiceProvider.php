@@ -29,6 +29,7 @@ class RaptorServiceProvider extends PackageServiceProvider
             ->hasRoutes('web', 'api')
             ->hasTranslations()
             ->hasMigrations(
+                'alter_users_table',
                 'create_tenants_table',
                 'create_addresses_table',
                 'create_roles_table',
@@ -37,7 +38,6 @@ class RaptorServiceProvider extends PackageServiceProvider
                 'create_role_user_table',
                 'create_permission_user_table',
                 'create_aborts_table',
-                'alter_users_table',
             )
             ->hasCommand(RaptorCommand::class)
             ->hasInstallCommand(function (InstallCommand $command) {
