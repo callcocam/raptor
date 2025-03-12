@@ -17,4 +17,9 @@ class Raptor extends Facade
     {
         return \Callcocam\Raptor\Raptor::class;
     }
+
+    public static function registerConfig(callable $callback): void
+    {
+        static::$app->bind(\Callcocam\Raptor\Raptor::class, $callback);
+    }
 }

@@ -7,6 +7,7 @@
 
 namespace Callcocam\Raptor;
 
+use Callcocam\Raptor\Commands\MakeRaptorProviderCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Callcocam\Raptor\Commands\RaptorCommand;
@@ -41,6 +42,7 @@ class RaptorServiceProvider extends PackageServiceProvider
             )
             ->hasCommand(RaptorCommand::class)
             ->hasCommand(RaptorSetupCommand::class)
+            ->hasCommand(MakeRaptorProviderCommand::class)
             ->hasInstallCommand(function (InstallCommand $command) {
                 $command
                     ->publishConfigFile()

@@ -1,26 +1,24 @@
 <template>
     <div>
         <slot />
-        <div class="py-12">
-            <div class="p-4 sm:p-6 lg:p-8">
-                <SCTable
-                    :data="data.data"
-                    :columns="columns"
-                    :filters="filters"
-                    :bulk-actions="bulkActions"
-                    :config="config"
-                    :pagination="pagination"
-                    @bulk-action="handleBulkAction"
-                    @select-all-records="handleSelectAllRecords"
-                    @row-action="handleRowAction"
-                    :routeName="config.routeName"
-                >
-                    <template #actions>
-                        <HeaderActions :actions="actions" />
-                        <!-- Header actios aqui -->
-                    </template>
-                </SCTable>
-            </div>
+        <div class="p-4 sm:p-6 lg:p-8">
+            <SCTable
+                :data="data.data"
+                :columns="columns"
+                :filters="filters"
+                :bulk-actions="bulkActions"
+                :config="config"
+                :pagination="pagination"
+                @bulk-action="handleBulkAction"
+                @select-all-records="handleSelectAllRecords"
+                @row-action="handleRowAction"
+                :routeName="config.routeName"
+            >
+                <template #actions>
+                    <HeaderActions :actions="actions" />
+                    <!-- Header actios aqui -->
+                </template>
+            </SCTable>
         </div>
     </div>
 </template>
@@ -37,6 +35,5 @@ interface Props {
     actions: any[];
 }
 const props = defineProps<Props>();
-console.log(props);
 const { columns, pagination, bulkActions, filters, actions, handleBulkAction, handleSelectAllRecords, handleRowAction } = useTableActions(props);
 </script>
