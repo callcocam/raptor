@@ -9,6 +9,7 @@ namespace Callcocam\Raptor\Core\Shinobi\Concerns;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Callcocam\Raptor\Core\Shinobi\Contracts\Role;
+use Callcocam\Raptor\Models\Role as ModelsRole;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 trait HasRoles
@@ -20,7 +21,7 @@ trait HasRoles
      */
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(config('shinobi.models.role'))->withTimestamps();
+        return $this->belongsToMany(config('raptor.models.role', ModelsRole::class))->withTimestamps();
     }
 
     /**
@@ -167,6 +168,6 @@ trait HasRoles
      */
     protected function getRoleModel(): Role
     {
-        return app()->make(config('shinobi.models.role'));
+        return app()->make(config('raptor.models.role', ModelsRole::class));
     }
 }

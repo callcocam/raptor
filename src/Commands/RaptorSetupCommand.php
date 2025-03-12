@@ -21,41 +21,118 @@ class RaptorSetupCommand extends Command
 {
     public $signature = 'raptor:setup';
 
-    public $description = 'Create some initial resources for Raptor, such as roles, permissions, and a user.';
+    public $description = 'Configura recursos iniciais para o Raptor, como tenants, usuários, funções e permissões.';
 
     public function handle(): int
     {
-        $this->comment('All done');
+        $this->comment('Iniciando configuração do Raptor');
 
-        if ($this->confirm('Do you want to create users?')) {
-            $user = $this->createUsers();
+        // Gerenciamento de Tenant
+        $tenant = $this->manageTenant();
+
+        // Gerenciamento de Usuário
+        $user = $this->manageUser($tenant);
+
+        // Gerenciamento de Roles
+        if ($this->confirm('Deseja gerenciar funções (roles)?')) {
+            $this->manageRole($user);
         }
 
-        if ($this->confirm('Do you want to create roles?')) {
-            $role  = $this->ask('What role do you want to create?');
-            $isAdministrator = $this->confirm('Is this role an administrator?');
-            if ($isAdministrator) {
-                $this->createRole($role, $user,  'all-access');
-            } else {
-                $this->createRole($role, $user);
-            }
+        // Gerenciamento de Permissões
+        if ($this->confirm('Deseja criar permissões baseadas nas rotas?')) {
+            $this->createPermission();
         }
 
+        $this->comment('Configuração concluída com sucesso!');
 
         return self::SUCCESS;
     }
 
+    /**
+     * Gerencia Tenants - permite selecionar existente ou criar novo
+     */
+    protected function manageTenant()
+    {
+        $tenants = Tenant::all();
+
+        if ($tenants->count()) {
+            $this->info('Tenants existentes encontrados: ' . $tenants->count());
+
+            if ($this->confirm('Deseja criar um novo tenant?')) {
+                return $this->createTenant();
+            } else {
+                $tenantId = $this->choice('Qual tenant você deseja utilizar?', Tenant::pluck('name', 'id')->toArray());
+                return Tenant::find($tenantId);
+            }
+        } else {
+            $this->info('Nenhum tenant encontrado.');
+            return $this->createTenant();
+        }
+    }
+
+    /**
+     * Gerencia Usuários - permite selecionar existente ou criar novo
+     */
+    protected function manageUser($tenant)
+    {
+        $users = User::all();
+
+        if ($users->count()) {
+            $this->info('Usuários existentes encontrados: ' . $users->count());
+
+            if ($this->confirm('Deseja criar um novo usuário?')) {
+                return $this->createUsers($tenant);
+            } else {
+                $userId = $this->choice('Qual usuário você deseja utilizar?', User::pluck('name', 'id')->toArray());
+                return User::find($userId);
+            }
+        } else {
+            $this->info('Nenhum usuário encontrado.');
+            return $this->createUsers($tenant);
+        }
+    }
+
+    /**
+     * Gerencia Roles - permite criar múltiplas roles
+     */
+    protected function manageRole($user)
+    {
+        $roles = Role::all();
+
+        if ($roles->count()) {
+            $this->info('Funções (roles) existentes encontradas: ' . $roles->count());
+
+            if ($this->confirm('Deseja associar o usuário a uma role existente?')) {
+                $roleId = $this->choice('Qual função (role) você deseja associar?', Role::pluck('name', 'id')->toArray());
+                $role = Role::find($roleId);
+
+                if ($user) {
+                    $user->assignRole($role);
+                    $this->info("Usuário associado à função '{$role->name}' com sucesso!");
+                }
+            }
+        }
+
+        if ($this->confirm('Deseja criar uma nova função (role)?')) {
+            $roleName = $this->ask('Qual o nome da função (role) que deseja criar?', 'Super Admin');
+            $isAdministrator = $this->confirm('Esta função é de administrador?');
+
+            if ($isAdministrator) {
+                $this->createRole($roleName, $user, true);
+            } else {
+                $this->createRole($roleName, $user);
+            }
+        }
+    }
+
     protected function createTenant()
     {
-        $this->comment('Creating tenant');
-        // Create tenant here using the Tenant model
-        // Vamos criar um tenant aqui usando o modelo Tenant
-        // Exemplo: Tenant::create(['name' => 'Company Name', 'domain' => 'company-name.com']);
+        $this->comment('Criando tenant');
 
-        $name = $this->ask('What is the name of the tenant?', fake()->company);
-        $domain = $this->ask('What is the domain of the tenant?', request()->getHost());
-        $email = $this->ask('What is the email of the tenant?', fake()->email);
-        $status = $this->choice('What is the status of the tenant?', ['published', 'draft'], 'published');
+        $name = $this->ask('Qual o nome do tenant?', fake()->company);
+        $domain = $this->ask('Qual o domínio do tenant?', request()->getHost());
+        $email = $this->ask('Qual o email do tenant?', fake()->email);
+        $status = $this->choice('Qual o status do tenant?', ['published', 'draft'], 'published');
 
         $tenant = Tenant::create([
             'name' => $name,
@@ -64,69 +141,84 @@ class RaptorSetupCommand extends Command
             'status' => $status,
         ]);
 
-        $this->info("Tenant `{$name}` created successfully.");
+        $this->info("Tenant `{$name}` criado com sucesso.");
 
         return $tenant;
     }
 
     protected function createUsers($tenant = null)
     {
-        $this->comment('Creating users');
+        $this->comment('Criando usuário');
 
-        // Create users here using the User model
-        // Vamos criar usuários aqui usando o modelo User
-        // Exemplo: User::create(['name' => 'John Doe', 'email' => 'jonh-doe@domino.com']);
+        $name = $this->ask('Qual o nome do usuário?', 'John Doe');
+        $email = $this->ask('Qual o email do usuário?', sprintf('john-doe@%s', request()->getHost()));
+        $status = $this->choice('Qual o status do usuário?', ['published', 'draft'], DefaultStatus::PUBLISHED->value);
 
-        // Exemplo de criação de um usuário padrão
-        $name = $this->ask('What is the name of the user?', 'John Doe');
-        $email = $this->ask('What is the email of the user?', sprintf('john-doe@%s', request()->getHost()));
-        $status = $this->choice('What is the status of the user?', ['published', 'draft'], DefaultStatus::PUBLISHED->value);
-        $user =   User::factory()->create([
+        if (User::where('email', $email)->count()) {
+            $this->error('Usuário já existe');
+            return $this->manageUser($tenant);
+        }
+
+        if (!$tenant) {
+            $tenant = $this->manageTenant();
+        }
+
+        $user = User::factory()->create([
+            'tenant_id' => $tenant->id,
             'name' => $name,
             'email' => $email,
             'status' => $status,
         ]);
 
-        $this->info('User `Admin` created successfully.');
+        // $user->tenant()->associate($tenant);
+        $user->save();
 
-        $user->tenant()->associate($tenant);
+        $this->info("Usuário `{$name}` criado com sucesso.");
 
         return $user;
     }
 
-    protected function createRole($role, $user = null, $permission = null)
+    protected function createRole($role, $user = null, $permission = false)
     {
-        $this->comment("Creating role `{$role}`");
+        $this->comment("Criando função (role) `{$role}`");
 
-        $newRole =  Role::create(['name' => $role, 'slug' => str($role)->slug(), 'description' => "Role for {$role}", 'special' => $permission]);
-
-        if ($user) {
-            $user->assignRole($newRole);
+        if (Role::where('slug', str($role)->slug())->exists()) {
+            $this->error("Função (role) `{$role}` já existe.");
+            return;
         }
 
-        $this->info("Role `{$role}` created successfully.");
+        $newRole = Role::create([
+            'name' => $role,
+            'slug' => str($role)->slug(),
+            'description' => "Função para {$role}",
+            'special' => $permission
+        ]); 
+        if ($user) {
+            $user->roles()->sync([$newRole->id]);
+            $this->info("Usuário associado à função '{$role}' com sucesso!");
+        }
 
-        if ($this->confirm('Create other role?')) {
-            $role  = $this->ask('What role do you want to create?');
-            $isAdministrator = $this->confirm('Is this role an administrator?');
+        $this->info("Função (role) `{$role}` criada com sucesso.");
+
+        if ($this->confirm('Criar outra função (role)?')) {
+            $roleName = $this->ask('Qual o nome da função (role) que deseja criar?', 'Super Admin');
+            $isAdministrator = $this->confirm('Esta função é de administrador?');
+
             if ($isAdministrator) {
-                $this->createRole($role, 'all-access');
+                $this->createRole($roleName, $user, true);
             } else {
-                $this->createRole($role);
+                $this->createRole($roleName, $user);
             }
         }
     }
 
     protected function createPermission()
     {
-        $this->comment("Creating permissions, such as `view users`, `edit users`, `delete users`, etc.");
-        // Create permissions here using the Permission model
-        // Vamos criar permissões aqui usando o modelo Permission, vamos usar como base a rotas do Laravel
-        // Exemplo: Permission::create(['name' => 'view users']);
+        $this->comment("Criando permissões baseadas nas rotas do sistema...");
 
-        // Exemplo de permissões para o CRUD de usuários, usando as rotas padrão do Laravel
         $routes = Route::getRoutes();
         $permissions = [];
+        $count = 0;
 
         foreach ($routes as $route) {
             if (isset($route->action['as'])) {
@@ -143,17 +235,17 @@ class RaptorSetupCommand extends Command
                     continue;
                 }
 
-                $permissions[] = [
+                Permission::create([
                     'name' => $name,
                     'slug' => $slug,
                     'description' => "Permissão para {$name}",
-                    'status' => PermissionStatus::PUBLISHED,
-                ];
+                    'status' => PermissionStatus::PUBLISHED->value,
+                ]);
+
+                $count++;
             }
         }
 
-        foreach ($permissions as $permission) {
-            Permission::create($permission);
-        }
+        $this->info("Total de {$count} permissões criadas com sucesso.");
     }
 }

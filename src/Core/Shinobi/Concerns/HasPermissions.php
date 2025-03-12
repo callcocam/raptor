@@ -11,6 +11,7 @@ use Callcocam\Raptor\Core\Shinobi\Facades\Shinobi;
 use Callcocam\Raptor\Core\Shinobi\Contracts\Permission;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Callcocam\Raptor\Core\Shinobi\Exceptions\PermissionNotFoundException;
+use Callcocam\Raptor\Models\Permission as ModelsPermission;
 
 trait HasPermissions
 {
@@ -21,7 +22,7 @@ trait HasPermissions
      */
     public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(config('shinobi.models.permission'))->withTimestamps();
+        return $this->belongsToMany(config('raptor.models.permission', ModelsPermission::class))->withTimestamps();
     }
 
     /**
@@ -162,16 +163,16 @@ trait HasPermissions
      */
     protected function getPermissionModel()
     {
-        if (config('shinobi.cache.enabled')) {
-            return cache()->tags(config('shinobi.cache.tag'))->remember(
+        if (config('raptor.cache.enabled')) {
+            return cache()->tags(config('raptor.cache.tag'))->remember(
                 'permissions',
-                config('shinobi.cache.length'),
+                config('raptor.cache.length'),
                 function() {
-                    return app()->make(config('shinobi.models.permission'))->get();
+                    return app()->make(config('raptor.models.permission'))->get();
                 }
             );
         }
 
-        return app()->make(config('shinobi.models.permission'));
+        return app()->make(config('raptor.models.permission'));
     }
 }
