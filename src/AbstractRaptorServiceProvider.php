@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Created by Claudio Campos.
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
 
- namespace Callcocam\Raptor;
+namespace Callcocam\Raptor;
 
 use Callcocam\Raptor\Facades\Raptor;
 use Callcocam\Raptor\Raptor as RaptorRaptor;
@@ -18,7 +19,9 @@ abstract class AbstractRaptorServiceProvider extends ServiceProvider
     public function register(): void
     {
         Raptor::registerConfig(
-            fn (): RaptorRaptor => $this->raptor(RaptorRaptor::make()),
+            fn(): RaptorRaptor => $this->raptor(RaptorRaptor::make()),
         );
+
+        $this->app->register(RaptorNavigationServiceProvider::class);
     }
 }

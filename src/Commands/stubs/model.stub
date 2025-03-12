@@ -4,23 +4,22 @@
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
+namespace App\Models;
 
-namespace Callcocam\Raptor\Models;
-
-use Callcocam\Raptor\Core\Landlord\BelongsToTenants;
-use Callcocam\Raptor\Enums\AboutStatus; 
+use App\Enums\{{name}}Status;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory; 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Callcocam\Raptor\Models\AbstractModel;
 
 
-class About extends AbstractModel
+class {{name}} extends AbstractModel
 {
-    use HasFactory, HasUlids, SoftDeletes, BelongsToTenants; 
+    use HasFactory, HasUlids, SoftDeletes; 
 
     protected $guarded = ['id'];
 
     protected $casts = [
-        'status' => AboutStatus::class,
+        'status' => {{name}}Status::class,
     ];
 } 

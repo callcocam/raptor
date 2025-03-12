@@ -1,71 +1,58 @@
 <?php
-
 /**
  * Created by Claudio Campos.
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
+namespace App\Http\Controllers\Raptor;
 
-namespace Callcocam\Raptor\Http\Controllers;
-
-use Callcocam\Raptor\Http\Resources\TenantResource;
-use Callcocam\Raptor\Models\Tenant;
+use App\Http\Resources\{{name}}Resource;
+use App\Models\{{name}};
 use Callcocam\Raptor\Core\Support\Table\Table;
 use Callcocam\Raptor\Core\Support\Form\Form;
 
+use Callcocam\Raptor\Http\Controllers\RaptorController;
 use Callcocam\Raptor\Core\Support\Table\Actions\Bulk\DeleteBulkAction;
 use Callcocam\Raptor\Core\Support\Table\Actions\EditAction;
-use Callcocam\Raptor\Support\Core\Table\Actions\DeleteAction;
-use Callcocam\Raptor\Core\Support\Table\Columns\TextColumn;
+use App\Support\Core\Table\Actions\DeleteAction;
+use Callcocam\Raptor\Core\Support\Table\Columns\TextColumn; 
 use Callcocam\Raptor\Core\Support\Table\Filters\SelectFilter;
 use Callcocam\Raptor\Core\Support\Form\Fields\TextAreaInput;
 use Callcocam\Raptor\Core\Support\Form\Fields\RadioInput;
 use Callcocam\Raptor\Core\Support\Form\Fields\TextInput;
 use Callcocam\Raptor\Core\Support\Form\Section;
-use Callcocam\Raptor\Http\Requests\Tenant\UpdateRequest;
-use Callcocam\Raptor\Http\Requests\Tenant\StoreRequest;
-use Callcocam\Raptor\Services\TenantService;
-use Closure;
+use App\Http\Requests\{{name}}\UpdateRequest;
+use App\Http\Requests\{{name}}\StoreRequest;
+use App\Services\{{name}}Service;
 
 /**
- * Class TenantController
+ * Class {{name}}Controller
  * 
- * Controller responsável por gerenciar operações CRUD para o modelo Tenant.
+ * Controller responsável por gerenciar operações CRUD para o modelo {{name}}.
  * Herda funcionalidades do RaptorController para automatizar tarefas comuns.
  */
-class TenantController extends RaptorController
+class {{name}}Controller extends RaptorController
 {
-    
-    /**
-     * Nome do grupo de navegação
-     * 
-     * Agrupa itens relacionados sob um mesmo cabeçalho no menu de navegação.
-     * Pode ser uma string fixa ou uma Closure que retorna uma string.
-     * 
-     * @var string|Closure|null
-     */
-    protected string | Closure | null $navigationGroup = 'Configurações';
-    
     /**
      * Define o modelo que será usado pelo controller
      * 
      * @var string|null
      */
-    protected ?string $model = Tenant::class;
-
+    protected ?string $model = {{name}}::class;
+    
     /**
      * Define o recurso usado para transformação de dados em APIs
      * 
      * @var string|null
      */
-    protected ?string $resource = TenantResource::class;
+    protected ?string $resource = {{name}}Resource::class;
 
     /**
      * Inicializa o controller com injeção de dependência do serviço
      * 
-     * @param TenantService $service Serviço que contém a lógica de negócios
+     * @param {{name}}Service $service Serviço que contém a lógica de negócios
      */
-    public function __construct(TenantService $service)
+    public function __construct({{name}}Service $service)
     {
         $this->service = $service;
     }
@@ -83,10 +70,10 @@ class TenantController extends RaptorController
     {
         return $form
             ->sections([
-                Section::make('Dados')
+                Section::make('Dados') 
                     ->label('Dados')
                     ->fields([
-                        TextInput::make('name')->label('Nome')->required(),
+                        TextInput::make('name')->label('Nome')->required(), 
                         RadioInput::make('status')->label('Situação')
                             ->options([
                                 'draft' => 'Rascunho',
@@ -116,8 +103,8 @@ class TenantController extends RaptorController
                 TextColumn::make('updated_at')->format(fn($value) => $value->diffForHumans()),
             ])
             ->actions([
-                EditAction::make()->route('tenants.edit'),
-                //DeleteAction::make()->route('tenants.destroy'),
+                EditAction::make()->route('{{routePrefix}}.edit'),
+                //DeleteAction::make()->route('{{routePrefix}}.destroy'),
             ])
             ->filters([
                 SelectFilter::make('status', 'Situação')
@@ -129,7 +116,7 @@ class TenantController extends RaptorController
             ->bulkActions([
                 DeleteBulkAction::make('Excluir Selecionados')
                     ->requireConfirmation(true)
-                    ->url(fn($model) => route('tenants.destroy', $model->id)),
+                    ->url(fn($model) => route('{{routePrefix}}.destroy', $model->id)),
             ]);
     }
 

@@ -8,10 +8,10 @@ use Callcocam\Raptor\Facades\Raptor;
 use Illuminate\Support\Facades\Route; 
 Route::group([
     'middleware' => ['web', 'auth'],
-    // 'prefix' => Raptor::path(),
+    'prefix' => Raptor::getPath(),
     // 'as' => 'raptor.',
-    'namespace' => Raptor::getNamespace('Http\Controllers'),
-], function () {
+    // 'namespace' => Raptor::getNamespace('Http\Controllers'),
+], function () { 
     Route::resource(__('tenants'), \Callcocam\Raptor\Http\Controllers\TenantController::class); 
     Route::resource(__('users'), \Callcocam\Raptor\Http\Controllers\UserController::class);
     Route::resource(__('roles'), \Callcocam\Raptor\Http\Controllers\RoleController::class);

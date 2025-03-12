@@ -1,0 +1,43 @@
+<?php
+/**
+ * Created by Claudio Campos.
+ * User: callcocam@gmail.com, contato@sigasmart.com.br
+ * https://www.sigasmart.com.br
+ */
+namespace App\Services;
+
+use App\Models\{{name}};
+use Illuminate\Http\Request;
+use Callcocam\Raptor\Services\RaptorService;
+
+/**
+ * Class {{name}}Service
+ * 
+ * Serviço responsável pela lógica de negócios relacionada ao modelo {{name}}.
+ * Implementa operações CRUD e regras de negócio específicas do domínio.
+ * Herda funcionalidades comuns do RaptorService.
+ */
+class {{name}}Service extends RaptorService
+{
+    /**
+     * Inicializa o serviço com injeção de dependência do modelo e da requisição
+     * 
+     * @param {{name}} $model Instância do modelo
+     * @param Request $request Requisição HTTP atual
+     */
+    public function __construct({{name}} $model, Request $request)
+    {
+        parent::__construct($model, $request);
+    }
+    
+    /**
+     * Você pode adicionar métodos personalizados aqui para implementar
+     * lógicas de negócio específicas para o modelo {{name}}, como:
+     * 
+     * - Processamento de dados complexos
+     * - Integrações com serviços externos
+     * - Validações específicas de domínio
+     * - Operações em lote
+     * - Relatórios ou estatísticas
+     */
+}

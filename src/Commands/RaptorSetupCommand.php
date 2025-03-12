@@ -27,6 +27,10 @@ class RaptorSetupCommand extends Command
     {
         $this->comment('Iniciando configuração do Raptor');
 
+        if (!$this->confirm('Deseja criar um tenant, usuário, funções e permissões?')) {
+            return self::SUCCESS;
+        }
+
         // Gerenciamento de Tenant
         $tenant = $this->manageTenant();
 
