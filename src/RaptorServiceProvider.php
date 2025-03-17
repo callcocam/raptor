@@ -14,6 +14,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Callcocam\Raptor\Commands\RaptorCommand;
 use Callcocam\Raptor\Commands\RaptorSetupCommand;
 use Callcocam\Raptor\Commands\RemoveCrudCommand;
+use Callcocam\Raptor\Core\Shinobi\ShinobiServiceProvider;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 
 class RaptorServiceProvider extends PackageServiceProvider
@@ -40,7 +41,7 @@ class RaptorServiceProvider extends PackageServiceProvider
                 'create_permission_role_table',
                 'create_role_user_table',
                 'create_permission_user_table',
-                'create_aborts_table',
+                'create_abouts_table',
             )
             ->hasCommand(RaptorCommand::class)
             ->hasCommand(RaptorSetupCommand::class)
@@ -61,6 +62,11 @@ class RaptorServiceProvider extends PackageServiceProvider
                         $command->call('raptor:setup');
                     });
             });
+    }
+
+    public function packageRegistered()
+    {
+        $this->app->register(ShinobiServiceProvider::class);
     }
 
     public function packageBooted()

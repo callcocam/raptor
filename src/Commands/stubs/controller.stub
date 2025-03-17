@@ -24,6 +24,7 @@ use Callcocam\Raptor\Core\Support\Form\Section;
 use App\Http\Requests\{{name}}\UpdateRequest;
 use App\Http\Requests\{{name}}\StoreRequest;
 use App\Services\{{name}}Service;
+use Closure;
 
 /**
  * Class {{name}}Controller
@@ -46,6 +47,56 @@ class {{name}}Controller extends RaptorController
      * @var string|null
      */
     protected ?string $resource = {{name}}Resource::class;
+
+    /**
+     * Nome do grupo de navegação
+     * 
+     * Agrupa itens relacionados sob um mesmo cabeçalho no menu de navegação.
+     * Pode ser uma string fixa ou uma Closure que retorna uma string.
+     * 
+     * @var string|Closure|null
+     */
+    protected string | Closure | null $navigationGroup = null;
+    
+    /**
+     * Rótulo do modelo no singular
+     * 
+     * Usado para identificar um registro individual nas telas de criação, edição e visualização.
+     * Pode ser uma string fixa ou uma Closure que retorna uma string baseada no modelo.
+     * 
+     * @var string|Closure|null
+     */
+    protected string | Closure | null $modelLabel = null;
+
+    /**
+     * Rótulo do modelo no plural
+     * 
+     * Usado para identificar a coleção de registros na tela de listagem.
+     * Pode ser uma string fixa ou uma Closure que retorna uma string baseada no modelo.
+     * 
+     * @var string|Closure|null
+     */
+    protected string | Closure | null $modelLabelPlural = null;
+
+    /**
+     * Descrição do modelo
+     * 
+     * Fornece informações adicionais sobre o modelo nas interfaces.
+     * Pode ser uma string fixa ou uma Closure que retorna uma string baseada no modelo.
+     * 
+     * @var string|Closure|null
+     */
+    protected string | Closure | null $modelDescription = null;
+
+    /**
+     * Ordem de exibição na navegação
+     * 
+     * Define a posição do item de menu dentro ou fora de um grupo de navegação.
+     * Pode ser um número, string ou Closure que retorna um número.
+     * 
+     * @var int|string|Closure|null
+     */
+    protected int | string | Closure | null $navigationSort = 0;
 
     /**
      * Inicializa o controller com injeção de dependência do serviço

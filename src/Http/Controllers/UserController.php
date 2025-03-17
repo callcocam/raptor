@@ -13,7 +13,8 @@ use Callcocam\Raptor\Core\Support\Form\Fields\AddressInput;
 use Callcocam\Raptor\Core\Support\Form\Fields\CheckboxListInput; 
 use Callcocam\Raptor\Core\Support\Form\Fields\FileInput;
 use Callcocam\Raptor\Core\Support\Form\Fields\MaskInput;
-use Callcocam\Raptor\Core\Support\Form\Fields\PasswordInput; 
+use Callcocam\Raptor\Core\Support\Form\Fields\PasswordInput;
+use Callcocam\Raptor\Core\Support\Form\Fields\RadioInput;
 use Callcocam\Raptor\Core\Support\Form\Fields\TextInput;
 use Callcocam\Raptor\Http\Resources\UserResource; 
 use Callcocam\Raptor\Core\Support\Form\Form; 
@@ -74,6 +75,13 @@ class UserController extends RaptorController
                             ->maxSize(1024)
                             ->multiple()
                             ->columnSpanFull(),
+                            RadioInput::make('status')
+                            ->options([
+                                'draft' => 'Rascunho',
+                                'published' => 'Publicado',
+                            ])
+                            ->required()
+                            ->columnSpanFull(),
                     ]),
 
                 Section::make('Dados de Acesso')
@@ -92,7 +100,7 @@ class UserController extends RaptorController
                             ->columnSpanFull()
                             ->required(),
                     ]),
-
+          
                 Section::make('Endereço')
                     ->columns(1)
                     ->label('Endereço')
@@ -153,5 +161,32 @@ class UserController extends RaptorController
         } catch (\Exception $e) {
             return redirect()->back()->withErrors($e->getMessage());
         }
+    }
+
+     /**
+     * Define os valores padrão para um novo registro
+     * 
+     * @return array Valores padrão
+     */
+    protected function defaults(): array
+    {
+        return [
+            'name' => '',
+            'email' => '',
+            'status' => 'draft',
+            'password' => '',
+            'password_confirmation' => '',
+            'description' => '',
+            'address' => [
+                'zip_code' => '',
+                'street' => '',
+                'number' => '',
+                'complement' => '',
+                'neighborhood' => '',
+                'city' => '',
+                'state' => '',
+                'country' => '',
+            ]
+        ];
     }
 }

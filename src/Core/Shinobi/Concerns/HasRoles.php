@@ -1,9 +1,11 @@
 <?php
+
 /**
  * Created by Claudio Campos.
  * User: callcocam@gmail.com, contato@sigasmart.com.br
  * https://www.sigasmart.com.br
  */
+
 namespace Callcocam\Raptor\Core\Shinobi\Concerns;
 
 use Illuminate\Support\Arr;
@@ -136,7 +138,7 @@ trait HasRoles
      */
     protected function getRoles(array $roles)
     {
-        return array_map(function($role) {
+        return array_map(function ($role) {
             $model = $this->getRoleModel();
 
             if ($role instanceof $model) {
@@ -153,8 +155,8 @@ trait HasRoles
     {
         if ($this->hasRoles()) {
             return ($this->roles
-                ->filter(function($role) {
-                    return ! is_null($role->special);
+                ->filter(function ($role) {
+                    return  $role->special;
                 })->count()) >= 1;
         }
 

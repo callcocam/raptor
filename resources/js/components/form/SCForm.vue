@@ -48,7 +48,7 @@
     </Form>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { Link, useForm } from '@inertiajs/vue3';
 import { useGridClasses } from './../../composables/useGridClasses'
 import { Form } from '@/components/ui/form';
@@ -62,11 +62,12 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormConfig } from './types';
-import Separator from '@/components/ui/separator/Separator.vue';
+import Separator from '@/components/ui/separator/Separator.vue'; 
 
 const props = defineProps<{
     sections: any[];
     record: any;
+    values: any;
     actions: any[];
     config: FormConfig & {
         action: string;
@@ -80,8 +81,7 @@ const formLayout = computed(() => {
     return generateLayoutClasses(props.config.layout)
 })
 
-const form = useForm(props.record);
-
+const form = useForm(props.values);  
 
 const handleSubmit = () => {
     if (props.config.method.toLowerCase() === 'post') {
@@ -94,5 +94,5 @@ const handleSubmit = () => {
 
 const handleUpdate = (data: any) => {
     console.log('update', data)
-};
+}; 
 </script>

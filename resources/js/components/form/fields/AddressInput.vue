@@ -5,7 +5,7 @@
             <!-- CEP field with auto-complete -->
             <div class="grid grid-cols-6 gap-4">
                 <div class="col-span-2">
-                    <FormFieldAddres label="CEP" name="zip_code" :errors="form.errors" :parent-field="field.name">
+                    <FormFieldAddres label="CEP" name="zip_code" :errors="currentErros" :parent-field="field.name">
                         <Input v-model="address.zip_code" placeholder="00000-000" @blur="handlePostalCodeBlur"
                             :disabled="loading" />
                         <div v-if="loading" class="text-xs text-muted-foreground mt-1 flex items-center gap-1">
@@ -18,13 +18,13 @@
             <!-- Street & Number -->
             <div class="grid grid-cols-6 gap-4">
                 <div class="col-span-4">
-                    <FormFieldAddres label="Logradouro" name="street" :errors="form.errors" :parent-field="field.name">
+                    <FormFieldAddres label="Logradouro" name="street" :errors="currentErros" :parent-field="field.name">
                         <Input v-model="address.street" placeholder="Rua, Avenida, etc"
                             :disabled="field.props?.disabled" />
                     </FormFieldAddres>
                 </div>
                 <div class="col-span-2">
-                    <FormFieldAddres label="Número" name="number" :errors="form.errors" :parent-field="field.name">
+                    <FormFieldAddres label="Número" name="number" :errors="currentErros" :parent-field="field.name">
                         <Input v-model="address.number" placeholder="Número" :disabled="field.props?.disabled" />
                     </FormFieldAddres>
                 </div>
@@ -32,14 +32,14 @@
             <!-- Complement & district -->
             <div class="grid grid-cols-6 gap-4">
                 <div class="col-span-3">
-                    <FormFieldAddres label="Complemento" name="complement" :errors="form.errors"
+                    <FormFieldAddres label="Complemento" name="complement" :errors="currentErros"
                         :parent-field="field.name">
                         <Input v-model="address.complement" placeholder="Apto, Sala, etc"
                             :disabled="field.props?.disabled" />
                     </FormFieldAddres>
                 </div>
                 <div class="col-span-3">
-                    <FormFieldAddres label="Bairro" name="district" :errors="form.errors" :parent-field="field.name">
+                    <FormFieldAddres label="Bairro" name="district" :errors="currentErros" :parent-field="field.name">
                         <Input v-model="address.district" placeholder="Bairro" :disabled="field.props?.disabled" />
                     </FormFieldAddres>
                 </div>
@@ -47,12 +47,12 @@
             <!-- City & State -->
             <div class="grid grid-cols-6 gap-4">
                 <div class="col-span-4">
-                    <FormFieldAddres label="Cidade" name="city" :errors="form.errors" :parent-field="field.name">
+                    <FormFieldAddres label="Cidade" name="city" :errors="currentErros" :parent-field="field.name">
                         <Input v-model="address.city" placeholder="Cidade" :disabled="field.props?.disabled" />
                     </FormFieldAddres>
                 </div>
                 <div class="col-span-2">
-                    <FormFieldAddres label="UF" name="state" :errors="form.errors" :parent-field="field.name">
+                    <FormFieldAddres label="UF" name="state" :errors="currentErros" :parent-field="field.name">
                         <Select v-model="address.state" :disabled="field.props?.disabled">
                             <SelectTrigger>
                                 <SelectValue placeholder="UF" />
@@ -67,14 +67,14 @@
                 </div>
             </div>
             <div class="col-span-12">
-                <FormFieldAddres label="Padrão" name="is_default" :errors="form.errors" :parent-field="field.name">
+                <FormFieldAddres label="Padrão" name="is_default" :errors="currentErros" :parent-field="field.name">
                     <div class="flex items-center space-x-2">
                         <Switch id="airplane-mode" v-model="address.is_default" />
                     </div>
                 </FormFieldAddres>
             </div>
             <FormDescription v-if="field.description">{{ field.description }}</FormDescription>
-            <FormMessage :errors="form.errors" :name="field.name" />
+            <FormMessage :errors="currentErros" :name="field.name" /> 
         </FormItem>
     </ShadcnFormField>
 </template>
@@ -115,6 +115,13 @@ interface AddressInputProps {
 
 const props = defineProps<AddressInputProps>()
 const emit = defineEmits(['update:modelValue'])
+
+const currentErros = ref<Record<string, string[]>>({})
+
+watch(() => props.form.errors, (errors) => {
+    console.log('Errors:', errors)
+    currentErros.value = errors || []
+}, { immediate: true })
 
 // Brazilian states
 const brazilianStates = [

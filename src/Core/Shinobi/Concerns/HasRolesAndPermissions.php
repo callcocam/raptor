@@ -33,14 +33,12 @@ trait HasRolesAndPermissions
     }
 
     protected function hasPermissionThroughRoleFlag(): bool
-    {
+    { 
         if ($this->hasRoles()) {
-            return ! ($this->roles
-                ->filter(function ($role) {
-                    return   $role->special;
-                })
-                ->pluck('special')
-                ->contains('no-access'));
+            return  $this->roles
+                ->filter(function ($role) { 
+                    return $role->blocked;
+                })->count() <= 0;
         }
 
         return false;

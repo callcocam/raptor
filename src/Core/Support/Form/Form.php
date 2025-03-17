@@ -56,6 +56,11 @@ class Form
     protected ?string $model = null;
 
     /**
+     * @var array
+     */
+    protected array $values = [];
+
+    /**
      * @var string
      */
     protected ?string $resource = null;
@@ -141,7 +146,16 @@ class Form
     protected function getSections(): array
     {
         return array_map(function (Sections $section) {
-            return $section->toArray($this->record);
+            $fields = $section->toArray($this->record); 
+            foreach ($fields['fields'] as $field) {
+                $fieldName = $field['name'];
+                $recordValue = data_get($this->record, $fieldName);
+                $defaultValue = $field['default'] ?? null;
+                
+                // Use record value if it exists, otherwise use default value
+                $this->values[$fieldName] = $recordValue !== null ? $recordValue : $defaultValue;
+            }
+            return $fields;
         }, $this->sections);
     }
 
@@ -163,11 +177,18 @@ class Form
         return $this->getRoute();
     }
 
+    public function getValues()
+    {
+        
+        return $this->values;
+    }
+
     public function toArray()
     {
         return [
             'sections' => $this->getSections(),
             'record' => $this->getRecord(),
+            'values' => $this->getValues(),
             'actions' => $this->getHeaderActions(),
             'breadcrumbs' => $this->getBreadcrumbs(),
             'hasBreadcrumbs' => $this->hasBreadcrumbs(),

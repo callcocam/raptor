@@ -43,7 +43,6 @@ trait HasPermissions
         if ((method_exists($this, 'hasPermissionFlags') and $this->hasPermissionFlags())) {
             return $this->hasPermissionThroughFlag();
         }
-        
         // Fetch permission if we pass through a string
         if (is_string($permission)) {
             $permission = $this->getPermissionModel()->where('slug', $permission)->first();

@@ -12,12 +12,16 @@
                 <slot name="appendLabel" />
             </FormLabel>
             <FormDescription v-if="field.description">{{ field.description }}</FormDescription>
-            <FormMessage :errors="form.errors" :name="field.name" />
+            <FormMessage :errors="currentErros" :name="field.name" /> 
+            <p v-if="Object.keys(currentErros).includes(field.name)" class="text-sm text-destructive mt-1">
+                {{ currentErros[field.name] }}
+            </p>
         </FormItem>
     </ShadcnFormField>
 </template>
 <script setup lang="ts">
-import { FormField as ShadcnFormField, FormItem, FormLabel, FormMessage, FormDescription, FormControl} from '@/components/ui/form'
+import { FormControl, FormDescription, FormItem, FormLabel, FormMessage, FormField as ShadcnFormField } from '@/components/ui/form';
+import { ref, watch } from 'vue';
 import { FormField } from './types';
 /**
  * Gera um ID único para cada item
@@ -25,11 +29,21 @@ import { FormField } from './types';
 function generateUniqueId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
 }
-defineProps<{
+const props = defineProps<{
     field: FormField;
     form: any;
     appendLabel?: boolean;
     prependLabel?: boolean;
 }>();
 const emit = defineEmits(['update:modelValue']);
+
+const currentErros = ref<string[]>([]);
+
+watch(
+    () => props.form.errors,
+    (errors) => {
+        currentErros.value = errors || [];
+    },
+    { immediate: true },
+);
 </script>

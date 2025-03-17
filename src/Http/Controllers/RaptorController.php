@@ -20,6 +20,7 @@ use Callcocam\Raptor\Services\RaptorService;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -191,6 +192,7 @@ abstract class RaptorController extends Controller implements NavigationGroupInt
      */
     public function create(Request $request)
     {
+         
         return Inertia::render($this->getView('Create'), $this->form(Form::make($request))
             ->record($this->getModel()::query()->make($this->defaults()))
             ->route($this->getUrl('store'))
@@ -593,5 +595,23 @@ abstract class RaptorController extends Controller implements NavigationGroupInt
     protected function updateValidationRules(string $id): array
     {
         return [];
+    }
+
+    /**
+     * Namo da da classe do controlador
+     *
+     * @return string
+     */
+    public function getControllerName()
+    {
+        return static::class;
+    }
+
+    public function isAuthorized()
+    {
+        if (method_exists($this, 'authorize')) {
+            return $this->authorize($this->routePrefix('index'));
+        } 
+        return Gate::allows($this->routePrefix('index'));
     }
 }

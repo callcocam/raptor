@@ -173,7 +173,9 @@ class RaptorNavigationGenerator
             foreach ($files as $file) {
                 $controller = $this->getControllerFromFile($file, $namespace, $directory);
                 if ($controller) {
-                    $controllers->push($controller);
+                    if ($controller->isAuthorized()) {
+                        $controllers->push($controller);
+                    }
                 }
             }
         }
