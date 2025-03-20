@@ -1,11 +1,11 @@
 <template>
     <TableRow :class="{ 'bg-muted/50': selected }">
-        <TableCell v-if="selectable" class="w-[50px]">
+        <TableCell v-if="selectable" class="w-[50px] p-1">
             <Checkbox :checked="selected" @update:checked="$emit('select-row', $event)" />
         </TableCell>
         <slot></slot>
         <template v-if="$slots.actions">
-            <TableCell class="text-right">
+            <TableCell class="text-right p-1">
                 <slot name="actions"></slot>
             </TableCell>
         </template>

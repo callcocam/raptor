@@ -32,11 +32,11 @@
                         :selected="selectedItems.includes(row.id)"
                         @select-row="(checked) => handleSelectRow(row.id, checked)"
                     >
-                        <TableCell v-for="column in columns" :key="column.key" :class="column.className">
+                        <TableCell v-for="column in columns" :key="column.key" :class="'p-1'">
                             {{ row[column.key] }}
                         </TableCell>
                         <template v-if="hasActions" #actions>
-                            <TableCell>
+                            <TableCell class="text-right p-1">
                                 <component
                                     :is="actionsType === 'inline' ? SCDataTableRowInlineActions : SCDataTableRowDropdownActions"
                                     :row="row" :actions="getRowActions(row)" @action="handleRowAction" />
