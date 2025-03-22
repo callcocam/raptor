@@ -8,8 +8,7 @@
 
 namespace Callcocam\Raptor\Core\Landlord;
 
-use Callcocam\Raptor\Core\Facades\Tenant;
-use App\Models\Tenant as ModelsTenant;
+use Callcocam\Raptor\Models\Tenant;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 
@@ -75,6 +74,6 @@ class LandlordServiceProvider extends ServiceProvider
 
     public  function getModel(): string
     {
-        return config('tenant.models.tenant', ModelsTenant::class);
+        return config('tenant.models.tenant',  Tenant::class);
     }
 }

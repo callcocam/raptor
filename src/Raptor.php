@@ -12,14 +12,9 @@ use Callcocam\Raptor\Contracts\NavigationGroupInterface;
 use Callcocam\Raptor\Http\Controllers\RaptorController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Collection; 
 use ReflectionClass;
-use Symfony\Component\Finder\SplFileInfo;
-use Illuminate\Support\Str;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
-use RegexIterator;
+use Symfony\Component\Finder\SplFileInfo; 
 
 class Raptor
 {
@@ -114,9 +109,7 @@ class Raptor
                     $controllerFile = $controller;
                     $class = $controller->getControllerName();
                     // Skip if is not permission to access
-                    if (!$controller->isAuthorized()) {
-                        continue;
-                    }
+                   
                     // Skip if class does not exist
                     if (!class_exists($class)) {
                         continue;
@@ -147,6 +140,7 @@ class Raptor
             foreach ($files as $file) {
                 $controller = $this->getControllerFromFile($file, $namespace, $directory);
                 if ($controller) {
+                    
                     $controllers->push($controller);
                 }
             }

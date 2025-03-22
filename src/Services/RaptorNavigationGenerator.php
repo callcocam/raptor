@@ -290,6 +290,10 @@ class RaptorNavigationGenerator
 
         // Primeiro passo: agrupar controladores por grupo de navegação
         foreach ($controllers as $controller) {
+            // Skip if is not permission to access
+            if (!$controller->isAuthorized()) { 
+                continue;
+            }
             $navigationGroup = $controller->getNavigationGroup();
             $route = $this->getRoute($controller);
             $item = [

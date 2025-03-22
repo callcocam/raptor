@@ -112,6 +112,7 @@ class Info
             'hasBreadcrumbs' => $this->hasBreadcrumbs(),
             'config' => array_merge($this->getConfig(), [
                 'model' => $this->getModel(),  
+                'fullWidth' => $this->isFullWidth(),
             ]),
             'actions' => [],
             'sections' => [],

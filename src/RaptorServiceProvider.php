@@ -14,6 +14,7 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Callcocam\Raptor\Commands\RaptorCommand;
 use Callcocam\Raptor\Commands\RaptorSetupCommand;
 use Callcocam\Raptor\Commands\RemoveCrudCommand;
+use Callcocam\Raptor\Core\Landlord\LandlordServiceProvider;
 use Callcocam\Raptor\Core\Shinobi\ShinobiServiceProvider;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 
@@ -66,6 +67,7 @@ class RaptorServiceProvider extends PackageServiceProvider
 
     public function packageRegistered()
     {
+        $this->app->register(LandlordServiceProvider::class);
         $this->app->register(ShinobiServiceProvider::class);
     }
 
