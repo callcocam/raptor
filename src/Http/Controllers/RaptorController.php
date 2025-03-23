@@ -263,6 +263,39 @@ abstract class RaptorController extends Controller implements NavigationGroupInt
     }
 
     /**
+     * Exporta os registros em um formato específico
+     * 
+     * @param Request $request Requisição HTTP
+     * @param string $export Tipo de exportação
+     * @return \Illuminate\Http\Response
+     */
+
+    public function export(Request $request, string $export, $id = null)
+    {
+        $query = $this->getQuery();
+
+        if ($id) {
+            $query->where('id', $id);
+        }
+
+        return $this->getService()->export($query, $export);
+    } 
+
+    /**
+     * Importa registros de um arquivo, api ou JSON
+     * 
+     * @param Request $request Requisição HTTP
+     * @param string $import Tipo de importação
+     * @return \Illuminate\Http\Response
+     */
+    public function import(Request $request, string $import)
+    {
+        $query = $this->getQuery();
+
+        return $this->getService()->import($query, $import);
+    }
+
+    /**
      * Retorna a query base para consultas ao modelo
      * 
      * @return \Illuminate\Database\Eloquent\Builder

@@ -12,9 +12,9 @@ use Callcocam\Raptor\Contracts\NavigationGroupInterface;
 use Callcocam\Raptor\Http\Controllers\RaptorController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Collection; 
+use Illuminate\Support\Collection;
 use ReflectionClass;
-use Symfony\Component\Finder\SplFileInfo; 
+use Symfony\Component\Finder\SplFileInfo;
 
 class Raptor
 {
@@ -109,12 +109,22 @@ class Raptor
                     $controllerFile = $controller;
                     $class = $controller->getControllerName();
                     // Skip if is not permission to access
-                   
+
                     // Skip if class does not exist
                     if (!class_exists($class)) {
                         continue;
                     }
                     Route::resource($controllerFile->getSlug(), $class);
+
+                    // Register routes for the controller
+                    Route::post(sprintf('%s/{import}/import', $controllerFile->getSlug()), [$class, 'import'])
+                        ->name(sprintf('%s.import', $controllerFile->getSlug()));
+
+                    Route::post(sprintf('%s/{export}/export', $controllerFile->getSlug()), [$class, 'export'])
+                        ->name(sprintf('%s.export', $controllerFile->getSlug()));
+                        
+                    Route::post(sprintf('%s/{export}/export/{id}', $controllerFile->getSlug()), [$class, 'export'])
+                        ->name(sprintf('%s.export.id', $controllerFile->getSlug()));
                 }
             });
 
@@ -140,7 +150,7 @@ class Raptor
             foreach ($files as $file) {
                 $controller = $this->getControllerFromFile($file, $namespace, $directory);
                 if ($controller) {
-                    
+
                     $controllers->push($controller);
                 }
             }

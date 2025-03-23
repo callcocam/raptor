@@ -33,6 +33,8 @@ class Table
     use Traits\HasSearchQuery;
     use Traits\WithSortRecords;
     use Traits\HasQuery;
+    use Traits\HasExport;
+    use Traits\HasImport;
 
     protected ?string $model = null;
 
@@ -149,6 +151,7 @@ class Table
 
     public function toArray()
     {
+         
         return [
             'data' => $this->getData(),
             'columns' => collect($this->getColumns())->map->toArray()->values()->toArray(),
@@ -158,7 +161,9 @@ class Table
             'breadcrumbs' => $this->getBreadcrumbs(),
             'hasBreadcrumbs' => $this->hasBreadcrumbs(),
             'config' => array_merge($this->getConfig(), [
-                'model' => $this->getModel(), 
+                'model' => $this->getModel(),
+                 'export'=>$this->getExport(),
+                 'import'=>$this->getImport(),
             ])
         ];
     }

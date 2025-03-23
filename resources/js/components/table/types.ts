@@ -1,4 +1,3 @@
-
 interface HeaderAction {
   label: string;
   icon: string;
@@ -84,6 +83,10 @@ interface TableConfig {
   routeName: string,
   breadcrumbs?: string[]
   fullWidth?: boolean, 
+  import?: any;       // Enable import functionality
+  export?: any;       // Enable export functionality
+  importEndpoint: string; // Custom import endpoint
+  exportEndpoint: string; // Custom export endpoint
 }
 
 interface Confirmation {

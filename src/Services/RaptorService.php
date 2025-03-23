@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Log;
 
 abstract class RaptorService
 {
+    use ImportService, ExportService;
 
     protected ?string $errorMessage = null;
     protected ?string $successMessage = null;
@@ -33,7 +34,7 @@ abstract class RaptorService
 
             // Process any additional data or relationships here
 
-            DB::commit(); 
+            DB::commit();
             $this->setSuccess('Registro criado com sucesso!');
             return $model;
         } catch (\Exception $e) {
@@ -46,7 +47,7 @@ abstract class RaptorService
 
     public function update($model, array $data)
     {
-        try { 
+        try {
             DB::beginTransaction();
             $this->beforeUpdate($model, $data);
             $model->update($data);
@@ -72,7 +73,7 @@ abstract class RaptorService
             $model->delete();
             $this->afterDelete($model);
             // Process any additional data or relationships here
-            
+
             DB::commit();
             $this->setSuccess('Registro excluído com sucesso!');
             return true;

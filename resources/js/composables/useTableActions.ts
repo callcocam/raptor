@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import type { BulkActionPayload } from '../types'
+// @ts-ignore
 import { Column } from '@/components/core/table/types'
 
 export function useTableActions(props: any) {
@@ -36,6 +37,7 @@ export function useTableActions(props: any) {
 
     // Action Handlers
     const executeBulkAction = (payload: BulkActionPayload) => {
+        // @ts-ignore
         router.post(route(routeName.value), { ...payload }, {
             onSuccess: ({ props: responseProps }: any) => {
                 if (payload.action === 'select-all') {
