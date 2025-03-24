@@ -1,0 +1,16 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-C6G_3qQV.css",
+    "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/js/index.ts": {
+    "file": "assets/index-DIkeS_Ym.js",
+    "name": "index",
+    "src": "resources/js/index.ts",
+    "isEntry": true,
+    "css": [
+      "assets/index-Dmj6OBHf.css"
+    ]
+  }
+}

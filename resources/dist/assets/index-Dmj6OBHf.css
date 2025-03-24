@@ -1,0 +1,1 @@
+.ProseMirror p.is-editor-empty:first-child:before{content:attr(data-placeholder);float:left;color:#adb5bd;pointer-events:none;height:0}.ProseMirror>*+*{margin-top:.75em}img{display:block;height:auto;margin:1.5rem 0;max-width:100%}.ProseMirror-selectednode img::selection{outline:3px solid var(--purple)}
