@@ -56,7 +56,7 @@ class ShinobiServiceProvider extends ServiceProvider
                 }
             } catch (Exception $e) {
                 // 
-                dd($e);
+                // dd($e);
             }
         });
     }
