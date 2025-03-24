@@ -30,7 +30,7 @@ class RaptorServiceProvider extends PackageServiceProvider
         $package
             ->name('raptor')
             ->hasConfigFile()
-            ->hasAssets()
+            // ->hasAssets()
             ->hasViews()
             ->hasRoutes('web', 'api')
             ->hasTranslations()
