@@ -104,12 +104,14 @@ abstract class Field
             'label' => $this->evaluate($this->label, ['model' => $model, 'field' => $this]),
             'grid' => $this->evaluate($this->grid, ['model' => $model, 'field' => $this]),
             'description' => $this->evaluate($this->description, ['model' => $model, 'field' => $this]),
+            'default' => $this->evaluate($this->default, ['model' => $model, 'field' => $this]),
             'icon' => $this->evaluate($this->icon, ['model' => $model, 'field' => $this]),
+            
             'props' => array_merge($this->props, [
                 'id' => $this->evaluate($this->id ?? $this->name, ['model' => $model, 'field' => $this]),
                 'name' => $this->evaluate($this->name, ['model' => $model, 'field' => $this]),
                 'required' => $this->evaluate($this->required, ['model' => $model, 'field' => $this]),
-                'type' => $this->evaluate($this->type, ['model' => $model, 'field' => $this]),
+                'type' => $this->evaluate($this->type, ['model' => $model, 'field' => $this]), 
             ]),
         ];
     }

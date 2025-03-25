@@ -147,7 +147,7 @@ class Form
     {
         return array_map(function (Sections $section) {
             $fields = $section->toArray($this->record); 
-            foreach ($fields['fields'] as $field) {
+            foreach ($fields['fields'] as $field) { 
                 $fieldName = $field['name'];
                 $recordValue = data_get($this->record, $fieldName);
                 $defaultValue = $field['default'] ?? null;
