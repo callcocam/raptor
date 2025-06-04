@@ -32,7 +32,7 @@ abstract class AbstractController extends Controller
     protected string $resourceName = '';
     protected string $pluralResourceName = '';
     protected string $routeNameBase = '';
-    protected string $viewPrefix = 'Crud';
+    protected string $viewPrefix = 'admin/crud';
 
     protected array $defaultBreadcrumbs = [];
     protected string $pageTitle = '';
