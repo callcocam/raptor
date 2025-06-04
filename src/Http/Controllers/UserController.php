@@ -89,16 +89,7 @@ class UserController extends AbstractController
     protected function getTableColumns(): array
     {
         return [
-            Column::make('Avatar')
-                ->id('avatar')
-                ->accessorKey(null)
-                ->hideable()
-                ->html()
-                ->cell(function (User $row) {
-                    $url = $row->avatar ? Storage::disk(config('filesystems.default'))->url($row->avatar) : null;
-                    return $url ? '<img src="' . $url . '" alt="Avatar" class="h-8 w-8 rounded-full object-cover">' : '-';
-                }),
-
+            
             Column::make('Nome', 'name')->sortable(),
 
             Column::make('E-mail', 'email')->sortable(),
