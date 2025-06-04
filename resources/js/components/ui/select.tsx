@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "../../lib/utils";
 import { Check, ChevronDown, X } from "lucide-react";
+import { Input } from "@raptor/components/ui/input";
 
 export interface SelectProps
   extends React.SelectHTMLAttributes<HTMLSelectElement> {}
@@ -135,6 +136,7 @@ const MultiSelectFilter = ({
   placeholder = "Select options..."
 }: MultiSelectFilterProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [searchFilter, setSearchFilter] = React.useState('');
   const dropdownRef = React.useRef<HTMLDivElement>(null);
 
   // Fechar dropdown quando clicar fora
@@ -142,12 +144,22 @@ const MultiSelectFilter = ({
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setSearchFilter('');
       }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Filtrar opções baseado na busca interna
+  const filteredOptions = React.useMemo(() => {
+    if (!searchFilter) return options;
+    
+    return options.filter(option => 
+      option.label.toLowerCase().includes(searchFilter.toLowerCase())
+    );
+  }, [options, searchFilter]);
 
   // Função para toggle de uma opção
   const toggleOption = (value: string) => {
@@ -194,8 +206,8 @@ const MultiSelectFilter = ({
 
       {isOpen && (
         <div className="absolute top-full left-0 z-50 w-full min-w-[220px] mt-1 rounded-md border bg-popover text-popover-foreground shadow-lg">
-          {/* Header do dropdown */}
-          <div className="p-3 border-b">
+          {/* Header do dropdown com busca interna */}
+          <div className="p-3 border-b space-y-2">
             <div className="flex items-center justify-between">
               <span className="font-medium text-sm">{label}</span>
               {values.length > 0 && (
@@ -209,40 +221,61 @@ const MultiSelectFilter = ({
                 </button>
               )}
             </div>
+
+            {/* Campo de busca interno como na imagem */}
+            <div className="relative">
+              <Input
+                placeholder={`${label}`}
+                value={searchFilter}
+                onChange={(e) => setSearchFilter(e.target.value)}
+                className="h-8 text-sm pl-8"
+              />
+              <div className="absolute left-2.5 top-1/2 transform -translate-y-1/2">
+                <svg className="h-4 w-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+            </div>
           </div>
 
-          {/* Lista de opções com checkboxes */}
+          {/* Lista de opções com checkboxes - agora filtrada */}
           <div className="p-1 max-h-64 overflow-y-auto">
-            {options.map((option) => {
-              const isSelected = values.includes(option.value);
-              
-              return (
-                <button
-                  key={option.value}
-                  type="button"
-                  className="relative flex w-full items-center gap-3 rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
-                  onClick={() => toggleOption(option.value)}
-                >
-                  {/* Checkbox customizado */}
-                  <div className={cn(
-                    "flex h-4 w-4 items-center justify-center rounded border border-input",
-                    isSelected && "bg-primary border-primary text-primary-foreground"
-                  )}>
-                    {isSelected && <Check className="h-3 w-3" />}
-                  </div>
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option) => {
+                const isSelected = values.includes(option.value);
+                
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className="relative flex w-full items-center gap-3 rounded-sm px-3 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
+                    onClick={() => toggleOption(option.value)}
+                  >
+                    {/* Checkbox customizado */}
+                    <div className={cn(
+                      "flex h-4 w-4 items-center justify-center rounded border border-input",
+                      isSelected && "bg-primary border-primary text-primary-foreground"
+                    )}>
+                      {isSelected && <Check className="h-3 w-3" />}
+                    </div>
 
-                  {/* Label e contador */}
-                  <div className="flex flex-1 items-center justify-between">
-                    <span>{option.label}</span>
-                    {showCounts && option.count !== undefined && (
-                      <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                        {option.count}
-                      </span>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
+                    {/* Label e contador */}
+                    <div className="flex flex-1 items-center justify-between">
+                      <span>{option.label}</span>
+                      {showCounts && option.count !== undefined && (
+                        <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
+                          {option.count}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                );
+              })
+            ) : (
+              <div className="px-3 py-2 text-sm text-muted-foreground text-center">
+                Nenhuma opção encontrada
+              </div>
+            )}
           </div>
         </div>
       )}

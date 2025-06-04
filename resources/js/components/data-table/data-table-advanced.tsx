@@ -212,13 +212,24 @@ export function DataTableAdvanced<T = any>({
     );
   };
 
-  // Função para renderizar filtros avançados com contadores
+  // Função para renderizar filtros avançados com busca integrada
   const renderAdvancedFilters = () => {
-    if (!filterOptions || filterOptions.length === 0) return null;
-
     return (
       <div className="flex items-center gap-3 flex-wrap">
-        {filterOptions.map((filter) => (
+        {/* 🔍 Campo de Busca - Primeiro item como na imagem */}
+        {searchable && (
+          <div className="flex items-center gap-2">
+            <Input
+              placeholder="Filter tasks..."
+              value={searchValue}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="w-64 h-9"
+            />
+          </div>
+        )}
+
+        {/* 🎯 Filtros MultiSelect */}
+        {filterOptions && filterOptions.length > 0 && filterOptions.map((filter) => (
           <div key={filter.column}>
             {filter.type === 'select' && filter.options ? (
               // 🔥 MultiSelectFilter AVANÇADO - Interface profissional com:
@@ -256,7 +267,7 @@ export function DataTableAdvanced<T = any>({
           </div>
         ))}
         
-        {/* Botão Reset Geral - Limpa TODOS os filtros */}
+        {/* 🔄 Botão Reset Geral - Último item como na imagem */}
         {hasActiveFilters && (
           <Button
             variant="outline"
@@ -355,22 +366,9 @@ export function DataTableAdvanced<T = any>({
         </div>
       )}
 
-      {/* Barra de filtros e busca modernos */}
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        {/* Filtros avançados */}
+      {/* Barra de filtros e busca integrados - Layout como na imagem */}
+      <div className="flex items-center gap-3 flex-wrap">
         {renderAdvancedFilters()}
-        
-        {/* Busca */}
-        {searchable && (
-          <div className="flex items-center gap-3">
-            <Input
-              placeholder="Buscar registros..."
-              value={searchValue}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="max-w-sm h-9"
-            />
-          </div>
-        )}
       </div>
 
       {/* Tabela moderna com espaçamento reduzido */}
