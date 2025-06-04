@@ -2,6 +2,7 @@ import React from 'react';
 import { DataTable } from '../data-table';
 import { DataTableProps } from '../../types';
 import { Button } from '../ui/button';
+import { Link } from '@inertiajs/react';
 
 interface CrudIndexProps extends DataTableProps {
   pageTitle?: string;
@@ -50,10 +51,10 @@ export function CrudIndex({
         
         {showCreateButton && can.create_resource && (
           <Button asChild>
-            <a href={getCreateUrl()}>
+            <Link href={getCreateUrl()}>
               <span className="mr-2">+</span>
               {createButtonText}
-            </a>
+            </Link>
           </Button>
         )}
       </div>

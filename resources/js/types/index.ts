@@ -27,8 +27,10 @@ export interface TableColumn {
     sortable?: boolean;
     searchable?: boolean;
     hideable?: boolean;
+    enableHiding?: boolean;
     type?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'image' | 'html';
     formatter?: 'formatDate' | 'renderBadge' | 'currency' | 'percentage';
+    formatterOptions?: string | Record<string, any>;
     options?: Record<string, any>;
     cell?: (row: any) => string | React.ReactNode;
     [key: string]: unknown;

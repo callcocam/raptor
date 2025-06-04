@@ -2,6 +2,7 @@ import React from 'react';
 import { DataTableAdvanced } from '../data-table/data-table-advanced';
 import { DataTableProps } from '../../types';
 import { Button } from '../ui/button';
+import { Link } from '@inertiajs/react';
 import { Trash2, Download, Plus } from 'lucide-react';
 
 interface CrudIndexAdvancedProps extends DataTableProps {
@@ -101,10 +102,10 @@ export function CrudIndexAdvanced({
         
         {showCreateButton && can.create_resource && (
           <Button asChild>
-            <a href={getCreateUrl()}>
+            <Link href={getCreateUrl()}>
               <Plus className="h-4 w-4 mr-2" />
               {createButtonText}
-            </a>
+            </Link>
           </Button>
         )}
       </div>

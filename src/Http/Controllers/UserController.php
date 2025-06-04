@@ -92,7 +92,7 @@ class UserController extends AbstractController
             
             Column::make('Nome', 'name')->sortable(),
 
-            Column::make('E-mail', 'email')->sortable(),
+            Column::make('E-mail', 'email') ,
 
             Column::make('Criado em', 'created_at')
                 ->sortable()

@@ -30,11 +30,20 @@ export function useDataTableAdvanced<T = any>({
   // Função para ler parâmetros da URL atual (vindos do backend)
   const getUrlParams = useCallback(() => {
     const url = new URL(window.location.href);
-    const params: Record<string, string> = {};
+    const params: Record<string, string | string[]> = {};
     
     // Ler todos os parâmetros da URL
     url.searchParams.forEach((value, key) => {
-      params[key] = value;
+      // Se já existe, converter para array
+      if (params[key]) {
+        if (Array.isArray(params[key])) {
+          (params[key] as string[]).push(value);
+        } else {
+          params[key] = [params[key] as string, value];
+        }
+      } else {
+        params[key] = value;
+      }
     });
     
     return params;
@@ -43,9 +52,9 @@ export function useDataTableAdvanced<T = any>({
   // Inicializar estados com valores da URL (backend)
   const urlParams = getUrlParams();
   
-  const [searchValue, setSearchValue] = useState(urlParams.search || '');
-  const [activeFilters, setActiveFilters] = useState<Record<string, string>>(() => {
-    const filters: Record<string, string> = {};
+  const [searchValue, setSearchValue] = useState(urlParams.search as string || '');
+  const [activeFilters, setActiveFilters] = useState<Record<string, string | string[]>>(() => {
+    const filters: Record<string, string | string[]> = {};
     filterOptions.forEach(filter => {
       if (urlParams[filter.column]) {
         filters[filter.column] = urlParams[filter.column];
@@ -57,7 +66,7 @@ export function useDataTableAdvanced<T = any>({
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(() => {
     if (urlParams.sort && urlParams.direction) {
       return {
-        column: urlParams.sort,
+        column: urlParams.sort as string,
         direction: urlParams.direction as 'asc' | 'desc'
       };
     }
@@ -71,10 +80,10 @@ export function useDataTableAdvanced<T = any>({
   useEffect(() => {
     const params = getUrlParams();
     
-    setSearchValue(params.search || '');
+    setSearchValue(params.search as string || '');
     
     // Atualizar filtros ativos
-    const newFilters: Record<string, string> = {};
+    const newFilters: Record<string, string | string[]> = {};
     filterOptions.forEach(filter => {
       if (params[filter.column]) {
         newFilters[filter.column] = params[filter.column];
@@ -85,7 +94,7 @@ export function useDataTableAdvanced<T = any>({
     // Atualizar ordenação
     if (params.sort && params.direction) {
       setSortConfig({
-        column: params.sort,
+        column: params.sort as string,
         direction: params.direction as 'asc' | 'desc'
       });
     } else {
@@ -108,7 +117,16 @@ export function useDataTableAdvanced<T = any>({
     // Adicionar novos parâmetros
     Object.entries(params).forEach(([key, value]) => {
       if (value !== null && value !== undefined && value !== '') {
-        url.searchParams.set(key, String(value));
+        if (Array.isArray(value)) {
+          // Para arrays, adicionar múltiplos parâmetros com mesmo nome
+          value.forEach(v => {
+            if (v !== null && v !== undefined && v !== '') {
+              url.searchParams.append(key, String(v));
+            }
+          });
+        } else {
+          url.searchParams.set(key, String(value));
+        }
       }
     });
 
@@ -135,7 +153,7 @@ export function useDataTableAdvanced<T = any>({
     });
   }, [activeFilters, sortConfig, buildUrl]);
 
-  // Aplicar filtro
+  // Aplicar filtro simples (string)
   const applyFilter = useCallback((column: string, value: string) => {
     const newFilters = { ...activeFilters };
     
@@ -145,6 +163,60 @@ export function useDataTableAdvanced<T = any>({
       newFilters[column] = value;
     }
 
+    setActiveFilters(newFilters);
+
+    const params: Record<string, any> = {
+      search: searchValue,
+      ...newFilters,
+    };
+
+    if (sortConfig) {
+      params.sort = sortConfig.column;
+      params.direction = sortConfig.direction;
+    }
+
+    const url = buildUrl(params);
+    router.get(url, {}, { 
+      preserveState: true,
+      preserveScroll: true,
+      replace: true 
+    });
+  }, [activeFilters, searchValue, sortConfig, buildUrl]);
+
+  // 🔥 NOVO: Aplicar filtro múltiplo (array)
+  const applyMultiFilter = useCallback((column: string, values: string[]) => {
+    const newFilters = { ...activeFilters };
+    
+    if (values.length === 0) {
+      delete newFilters[column];
+    } else {
+      newFilters[column] = values;
+    }
+
+    setActiveFilters(newFilters);
+
+    const params: Record<string, any> = {
+      search: searchValue,
+      ...newFilters,
+    };
+
+    if (sortConfig) {
+      params.sort = sortConfig.column;
+      params.direction = sortConfig.direction;
+    }
+
+    const url = buildUrl(params);
+    router.get(url, {}, { 
+      preserveState: true,
+      preserveScroll: true,
+      replace: true 
+    });
+  }, [activeFilters, searchValue, sortConfig, buildUrl]);
+
+  // 🔥 NOVO: Limpar filtro específico
+  const clearFilter = useCallback((column: string) => {
+    const newFilters = { ...activeFilters };
+    delete newFilters[column];
     setActiveFilters(newFilters);
 
     const params: Record<string, any> = {
@@ -272,6 +344,39 @@ export function useDataTableAdvanced<T = any>({
     hasSelection: selectedRows.size > 0,
   }), [selectedRows, isAllSelected]);
 
+  // 🔥 NOVO: Helper para obter valores de filtro (sempre como array)
+  const getFilterValues = useCallback((column: string): string[] => {
+    const value = activeFilters[column];
+    if (!value) return [];
+    return Array.isArray(value) ? value : [value];
+  }, [activeFilters]);
+
+  // 🔥 NOVO: Verificar se há filtros ativos
+  const hasActiveFilters = useMemo(() => {
+    return Object.keys(activeFilters).length > 0;
+  }, [activeFilters]);
+
+  // 🔥 NOVO: Limpar todos os filtros
+  const resetAllFilters = useCallback(() => {
+    setActiveFilters({});
+
+    const params: Record<string, any> = {
+      search: searchValue,
+    };
+
+    if (sortConfig) {
+      params.sort = sortConfig.column;
+      params.direction = sortConfig.direction;
+    }
+
+    const url = buildUrl(params);
+    router.get(url, {}, { 
+      preserveState: true,
+      preserveScroll: true,
+      replace: true 
+    });
+  }, [searchValue, sortConfig, buildUrl]);
+
   return {
     // Estados
     searchValue,
@@ -287,10 +392,12 @@ export function useDataTableAdvanced<T = any>({
     // Handlers
     handleSearchChange,
     applyFilter,
+    applyMultiFilter,
     applySort,
     toggleRowSelection,
     toggleAllSelection,
     clearSelection,
+    clearFilter,
     
     // Info de seleção
     selectionInfo,
@@ -299,5 +406,14 @@ export function useDataTableAdvanced<T = any>({
     searchable,
     sortable,
     selectable,
+
+    // 🔥 NOVO: Helper para obter valores de filtro (sempre como array)
+    getFilterValues,
+
+    // 🔥 NOVO: Verificar se há filtros ativos
+    hasActiveFilters,
+
+    // 🔥 NOVO: Limpar todos os filtros
+    resetAllFilters,
   };
 } 

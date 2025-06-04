@@ -11,9 +11,10 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Checkbox } from '../ui/checkbox';
-import { DropdownFilter } from '../ui/select';
+import { DropdownFilter, MultiSelectFilter } from '../ui/select';
 import { DataTableProps, TableColumn } from '../../types';
 import { useDataTableAdvanced } from '../../hooks/use-data-table-advanced';
+import { Link } from '@inertiajs/react';
 import { 
   Eye, 
   Edit, 
@@ -61,13 +62,18 @@ export function DataTableAdvanced<T = any>({
     originalData,
     handleSearchChange,
     applyFilter,
+    applyMultiFilter,
     applySort,
     toggleRowSelection,
     toggleAllSelection,
     clearSelection,
+    clearFilter,
     selectionInfo,
     searchable,
     sortable,
+    getFilterValues,
+    hasActiveFilters,
+    resetAllFilters,
   } = useDataTableAdvanced({
     data,
     columns,
@@ -87,7 +93,85 @@ export function DataTableAdvanced<T = any>({
       return column.cell(value);
     }
     
-    // Formatação por tipo
+    // 🔥 USAR CONFIGURAÇÕES REAIS DO BACKEND PRIMEIRO
+    // Verificar se tem formatter específico do backend
+    if (column.formatter) {
+      switch (column.formatter) {
+        case 'formatDate':
+          try {
+            const date = new Date(value);
+            
+            // Usar formatterOptions se disponível (ex: "dd/MM/yyyy HH:mm")
+            if (column.formatterOptions && typeof column.formatterOptions === 'string') {
+              // Implementar formatação customizada baseada no formatterOptions
+              const options = column.formatterOptions;
+              
+              if (options.includes('HH:mm')) {
+                // Data e hora
+                return date.toLocaleString('pt-BR', {
+                  day: '2-digit',
+                  month: '2-digit', 
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                });
+              } else {
+                // Apenas data
+                return date.toLocaleDateString('pt-BR');
+              }
+            }
+            
+            // Fallback para formatação padrão
+            return date.toLocaleDateString('pt-BR');
+          } catch {
+            return String(value);
+          }
+          
+        case 'renderBadge':
+          // Usar options do backend para mapear cores
+          if (column.options) {
+            const variant = column.options[value] || 'secondary';
+            const variantMap: Record<string, any> = {
+              'primary': 'default',
+              'secondary': 'secondary', 
+              'success': 'success',
+              'warning': 'warning',
+              'danger': 'destructive',
+              'info': 'info',
+              'purple': 'purple',
+              'pink': 'pink',
+              'gray': 'gray',
+            };
+            return (
+              <Badge variant={variantMap[variant] || 'secondary'} className="text-xs">
+                {value}
+              </Badge>
+            );
+          }
+          break;
+          
+        case 'currency':
+          try {
+            const numValue = typeof value === 'number' ? value : parseFloat(value);
+            return new Intl.NumberFormat('pt-BR', {
+              style: 'currency',
+              currency: 'BRL'
+            }).format(numValue);
+          } catch {
+            return String(value);
+          }
+          
+        case 'percentage':
+          try {
+            const numValue = typeof value === 'number' ? value : parseFloat(value);
+            return `${numValue.toFixed(2)}%`;
+          } catch {
+            return String(value);
+          }
+      }
+    }
+    
+    // 🔄 FALLBACK PARA FORMATAÇÃO POR TIPO (compatibilidade)
     switch (column.type) {
       case 'boolean':
         return (
@@ -106,26 +190,6 @@ export function DataTableAdvanced<T = any>({
       case 'html':
         return <div dangerouslySetInnerHTML={{ __html: String(value) }} />;
       default:
-        // Se tem formatter de badge, aplicar
-        if (column.formatter === 'renderBadge' && column.options) {
-          const variant = column.options[value] || 'secondary';
-          const variantMap: Record<string, any> = {
-            'primary': 'default',
-            'secondary': 'secondary',
-            'success': 'success',
-            'warning': 'warning',
-            'danger': 'destructive',
-            'info': 'info',
-            'purple': 'purple',
-            'pink': 'pink',
-            'gray': 'gray',
-          };
-          return (
-            <Badge variant={variantMap[variant] || 'secondary'} className="text-xs">
-              {value}
-            </Badge>
-          );
-        }
         return String(value);
     }
   };
@@ -157,25 +221,33 @@ export function DataTableAdvanced<T = any>({
         {filterOptions.map((filter) => (
           <div key={filter.column}>
             {filter.type === 'select' && filter.options ? (
-              <DropdownFilter
+              // 🔥 MultiSelectFilter AVANÇADO - Interface profissional com:
+              // ✅ Checkboxes para múltipla seleção
+              // ✅ Contadores por opção (ex: Backlog 6, Todo 10)
+              // ✅ Dropdown elegante com animações
+              // ✅ "Clear filters" individual 
+              // ✅ Badge de contador no trigger
+              <MultiSelectFilter
                 label={filter.label}
-                value={activeFilters[filter.column] || ''}
+                values={getFilterValues(filter.column)}
                 options={filter.options.map(option => ({
                   label: option.label,
                   value: String(option.value),
                   count: (option as any).count || undefined
                 }))}
-                onChange={(value) => applyFilter(filter.column, value)}
+                onChange={(values) => applyMultiFilter(filter.column, values)}
                 showCounts={true}
+                placeholder={`Selecionar ${filter.label.toLowerCase()}...`}
               />
             ) : (
+              // Filtro de texto simples (input)
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium text-muted-foreground">
                   {filter.label}:
                 </span>
                 <Input
                   placeholder={`Filtrar por ${filter.label.toLowerCase()}...`}
-                  value={activeFilters[filter.column] || ''}
+                  value={getFilterValues(filter.column)[0] || ''}
                   onChange={(e) => applyFilter(filter.column, e.target.value)}
                   className="w-48 h-9"
                 />
@@ -184,16 +256,12 @@ export function DataTableAdvanced<T = any>({
           </div>
         ))}
         
-        {/* Botão Reset */}
-        {Object.keys(activeFilters).length > 0 && (
+        {/* Botão Reset Geral - Limpa TODOS os filtros */}
+        {hasActiveFilters && (
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              Object.keys(activeFilters).forEach(key => {
-                applyFilter(key, '');
-              });
-            }}
+            onClick={resetAllFilters}
             className="h-9"
           >
             <RotateCcw className="w-4 h-4 mr-2" />
@@ -324,9 +392,6 @@ export function DataTableAdvanced<T = any>({
                   {renderSortableHeader(column)}
                 </TableHead>
               ))}
-              {actions && actions.length > 0 && (
-                <TableHead className="w-[100px] py-2">Ações</TableHead>
-              )}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -343,20 +408,15 @@ export function DataTableAdvanced<T = any>({
                   )}
                   {columns.map((column) => (
                     <TableCell key={column.accessorKey} className="py-2">
-                      {formatCellValue((row as any)[column.accessorKey], column)}
+                      {column.accessorKey === 'actions' ? renderActions(row) : formatCellValue((row as any)[column.accessorKey], column)}
                     </TableCell>
                   ))}
-                  {actions && actions.length > 0 && (
-                    <TableCell className="py-2">
-                      {renderActions(row)}
-                    </TableCell>
-                  )}
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell 
-                  colSpan={columns.length + (actions && actions.length > 0 ? 1 : 0) + (selectable ? 1 : 0)} 
+                  colSpan={columns.length + (selectable ? 1 : 0)} 
                   className="h-16 text-center text-muted-foreground"
                 >
                   Nenhum resultado encontrado.
@@ -446,10 +506,10 @@ function ActionButton({ action, row, routeNameBase }: ActionButtonProps) {
       className="h-7 w-7 p-0 hover:bg-muted"
       title={action.tooltip || action.header}
     >
-      <a href={url}>
+      <Link href={url}>
         <span className="sr-only">{action.header}</span>
         {getActionIcon(action.routeSuffix)}
-      </a>
+      </Link>
     </Button>
   );
 }
@@ -485,10 +545,10 @@ function DataTablePagination({ pagination, links }: DataTablePaginationProps) {
         <div className="flex items-center space-x-2">
           {links.prev ? (
             <Button variant="outline" className="h-8 w-8 p-0" asChild>
-              <a href={links.prev}>
+              <Link href={links.prev}>
                 <span className="sr-only">Página anterior</span>
                 <ChevronLeft className="w-4 h-4" />
-              </a>
+              </Link>
             </Button>
           ) : (
             <Button variant="outline" className="h-8 w-8 p-0" disabled>
@@ -497,10 +557,10 @@ function DataTablePagination({ pagination, links }: DataTablePaginationProps) {
           )}
           {links.next ? (
             <Button variant="outline" className="h-8 w-8 p-0" asChild>
-              <a href={links.next}>
+              <Link href={links.next}>
                 <span className="sr-only">Próxima página</span>
                 <ChevronRight className="w-4 h-4" />
-              </a>
+              </Link>
             </Button>
           ) : (
             <Button variant="outline" className="h-8 w-8 p-0" disabled>

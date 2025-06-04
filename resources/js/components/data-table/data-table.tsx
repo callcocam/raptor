@@ -11,6 +11,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { DataTableProps, TableColumn } from '../../types';
+import { Link } from '@inertiajs/react';
 import { Settings, ArrowUpDown, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function DataTable<T = any>({
@@ -210,9 +211,6 @@ export function DataTable<T = any>({
                   </div>
                 </TableHead>
               ))}
-              {actions && actions.length > 0 && (
-                <TableHead className="w-[100px]">Ações</TableHead>
-              )}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -221,20 +219,15 @@ export function DataTable<T = any>({
                 <TableRow key={index} className="hover:bg-muted/50">
                   {columns.map((column) => (
                     <TableCell key={column.accessorKey}>
-                      {formatCellValue((row as any)[column.accessorKey], column)}
+                      {column.accessorKey === 'actions' ? renderActions(row) : formatCellValue((row as any)[column.accessorKey], column)}
                     </TableCell>
                   ))}
-                  {actions && actions.length > 0 && (
-                    <TableCell>
-                      {renderActions(row)}
-                    </TableCell>
-                  )}
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell 
-                  colSpan={columns.length + (actions && actions.length > 0 ? 1 : 0)} 
+                  colSpan={columns.length} 
                   className="h-24 text-center text-muted-foreground"
                 >
                   Nenhum resultado encontrado.
@@ -296,10 +289,10 @@ function ActionButton({ action, row, routeNameBase }: ActionButtonProps) {
       size="sm"
       className="h-8 w-8 p-0"
     >
-      <a href={url} title={action.tooltip || action.header}>
+      <Link href={url} title={action.tooltip || action.header}>
         <span className="sr-only">{action.header}</span>
         {action.icon}
-      </a>
+      </Link>
     </Button>
   );
 }
@@ -335,10 +328,10 @@ function DataTablePagination({ pagination, links }: DataTablePaginationProps) {
         <div className="flex items-center space-x-2">
           {links.prev ? (
             <Button variant="outline" className="h-8 w-8 p-0" asChild>
-              <a href={links.prev}>
+              <Link href={links.prev}>
                 <span className="sr-only">Página anterior</span>
                 <ChevronLeft className="w-4 h-4" />
-              </a>
+              </Link>
             </Button>
           ) : (
             <Button variant="outline" className="h-8 w-8 p-0" disabled>
@@ -347,10 +340,10 @@ function DataTablePagination({ pagination, links }: DataTablePaginationProps) {
           )}
           {links.next ? (
             <Button variant="outline" className="h-8 w-8 p-0" asChild>
-              <a href={links.next}>
+              <Link href={links.next}>
                 <span className="sr-only">Próxima página</span>
                 <ChevronRight className="w-4 h-4" />
-              </a>
+              </Link>
             </Button>
           ) : (
             <Button variant="outline" className="h-8 w-8 p-0" disabled>
