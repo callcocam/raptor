@@ -1,17 +1,17 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "callcocam/raptor",
+    "description": "This is my package raptor",
     "keywords": [
-        ":vendor_name",
+        "Claudio Campos",
         "laravel",
-        ":package_slug"
+        "raptor"
     ],
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/callcocam/raptor",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Claudio Campos",
+            "email": "contato@sigasmar.com.br",
             "role": "Developer"
         }
     ],
@@ -20,7 +20,7 @@
         "spatie/laravel-package-tools": "^1.16",
         "illuminate/contracts": "^12.0"
     },
-    "require-dev": {     
+    "require-dev": {
         "laravel/pint": "^1.18",
         "nunomaduro/collision": "^8.6",
         "orchestra/testbench": "^9.0.0||^8.22.0",
@@ -30,19 +30,19 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src/",
-            "VendorName\\Skeleton\\Database\\Factories\\": "database/factories/"
+            "Callcocam\\Raptor\\": "src/",
+            "Callcocam\\Raptor\\Database\\Factories\\": "database/factories/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests/",
+            "Callcocam\\Raptor\\Tests\\": "tests/",
             "Workbench\\App\\": "workbench/app/"
         }
     },
     "scripts": {
         "post-autoload-dump": "@composer run prepare",
-        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-raptor --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
         "build": [
             "@composer run prepare",
@@ -68,10 +68,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "VendorName\\Skeleton\\SkeletonServiceProvider"
+                "Callcocam\\Raptor\\RaptorServiceProvider"
             ],
             "aliases": {
-                "Skeleton": "VendorName\\Skeleton\\Facades\\Skeleton"
+                "Raptor": "Callcocam\\Raptor\\Facades\\Raptor"
             }
         }
     },
