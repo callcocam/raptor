@@ -22,6 +22,7 @@ class Action
     public bool $isHtml = false; // Para indicar se a célula retorna HTML bruto
     public bool $isLink = true; // Para indicar se o botão é um link ou não
     public ?string $fullRouteName = null; // Nome completo da rota
+    public ?string $component = "Link"; // Componente a ser usado para renderizar a ação
 
     protected function __construct(string $accessorKey, ?string $header = null)
     {
@@ -95,6 +96,11 @@ class Action
         $this->fullRouteName = $fullRouteName;
         return $this;
     }
+    public function component(string $component): self
+    {
+        $this->component = $component;
+        return $this;
+    }
     public function getIsLink(): bool
     {
         return $this->isLink;
@@ -139,7 +145,10 @@ class Action
     {
         return $this->fullRouteName;
     }
-
+    public function getComponent(): string
+    {
+        return $this->component;
+    }
     public function toArray(): array
     {
         return [
@@ -155,6 +164,7 @@ class Action
             'isLink' => $this->getIsLink(),
             'icon' => $this->getIcon(),
             'fullRouteName' => $this->getFullRouteName(),
+            'component' => $this->getComponent(),
         ];
     }
 }

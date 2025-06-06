@@ -67,7 +67,7 @@ abstract class AbstractController extends Controller
 
     protected function getRouteNameBase(): string
     {
-        return __($this->routeNameBase);
+        return  $this->routeNameBase;
     }
 
     protected function generatePageTitle(string $action, ?Model $modelInstance = null): string
@@ -139,7 +139,7 @@ abstract class AbstractController extends Controller
     abstract protected function getSearchableColumns(): array;
     protected function getImportOptions(): array
     {
-        return [ 
+        return [
             //
         ];
     }
@@ -171,8 +171,8 @@ abstract class AbstractController extends Controller
                 ->accessorKey('edit');
         }
         return $actions;
-    } 
-    
+    }
+
     protected function getActions(): array
     {
 
@@ -182,7 +182,53 @@ abstract class AbstractController extends Controller
         return collect($actions)->map(function ($action) {
             return $action->toArray();
         })->toArray();
-        
+    }
+
+    /**
+     * Define as bulk actions (ações em massa) disponíveis na tabela.
+     * Pode ser sobrescrito por controllers filhos para adicionar ações customizadas.
+     *
+     * @return array
+     */
+    protected function getBulkActions(): array
+    {
+        $bulkActions = [];
+
+        // Bulk action para excluir registros selecionados
+        if (Gate::allows($this->getSidebarMenuPermission('destroy'))) {
+            $bulkActions[] = [
+                'id' => 'BulkDelete',
+                'label' => 'Excluir Selecionados',
+                'icon' => 'Trash2',
+                'variant' => 'destructive',
+                'color' => 'danger',
+                'confirmMessage' => 'Tem certeza que deseja excluir {count} registros? Esta ação não pode ser desfeita.',
+                'permission' => $this->getSidebarMenuPermission('destroy'),
+            ];
+        }
+
+        // Bulk action para arquivar registros (se o model tiver soft delete)
+        if (method_exists($this->model, 'bootSoftDeletes')) {
+            $bulkActions[] = [
+                'id' => 'BulkArchive',
+                'label' => 'Arquivar Selecionados',
+                'icon' => 'Archive',
+                'variant' => 'secondary',
+                'color' => 'secondary',
+                'confirmMessage' => 'Deseja arquivar {count} registros?',
+            ];
+        }
+
+        // Bulk action para exportar registros selecionados
+        $bulkActions[] = [
+            'id' => 'BulkExport',
+            'label' => 'Exportar Selecionados',
+            'icon' => 'Download',
+            'variant' => 'outline',
+            'color' => 'primary',
+        ];
+
+        return $bulkActions;
     }
     /**
      * Define os relacionamentos que devem ser carregados (eager loaded)
@@ -225,7 +271,23 @@ abstract class AbstractController extends Controller
     public function index(Request $request): Response
     {
         $this->authorize($this->getSidebarMenuPermission('index'));
-        $perPage = $request->input('per_page', 15);
+
+        // 🔥 Capturar query params para server-side
+        $perPage = $request->input('per_page', 10);
+        $currentPage = $request->input('page', 1);
+        $search = $request->input('search');
+        $sortBy = $request->input('sort_by');
+        $sortDirection = $request->input('sort_direction', 'asc');
+
+        // 🔥 Capturar filtros ativos
+        $filterDefinitions = $this->getFilters();
+        $currentFilters = [];
+        foreach ($filterDefinitions as $filter) {
+            $filterValue = $request->input('filters.' . $filter['column']);
+            if ($filterValue) {
+                $currentFilters[$filter['column']] = $filterValue;
+            }
+        }
 
         // Iniciar query e carregar relacionamentos definidos
         $query = $this->model::query();
@@ -246,26 +308,30 @@ abstract class AbstractController extends Controller
         }
         $tableColumns = array_values($tableColumns);
 
-        // Aplicar filtros (usando $tableColumns processado se necessário para lógica futura)
-        foreach ($this->getFilters() as $filter) {
-            if ($request->filled($filter['column'])) {
-                // Assumindo filtro simples por 'where' por enquanto
-                $query->where($filter['column'], $request->input($filter['column']));
+        // 🔥 Aplicar filtros server-side (melhorado)
+        foreach ($filterDefinitions as $filter) {
+            $filterValue = $request->input('filters.' . $filter['column']);
+            if ($filterValue) {
+                // Se o filtro for uma string com vírgulas (múltiplos valores)
+                if (is_string($filterValue) && str_contains($filterValue, ',')) {
+                    $values = array_map('trim', explode(',', $filterValue));
+                    $query->whereIn($filter['column'], $values);
+                } else {
+                    // Filtro simples
+                    $query->where($filter['column'], $filterValue);
+                }
             }
         }
 
-        // Aplicar busca (usando $tableColumns processado)
-        if ($request->filled('search')) {
-            $search = $request->input('search');
-            $searchableDbColumns = $this->getSearchableColumns(); // Obter colunas do novo método
+        // 🔥 Aplicar busca server-side (melhorado)
+        if ($search) {
+            $searchableDbColumns = $this->getSearchableColumns();
 
             if (!empty($searchableDbColumns)) {
                 $query->where(function ($q) use ($search, $searchableDbColumns) {
                     foreach ($searchableDbColumns as $dbColumn) {
-                        // Assume que getSearchableColumns retorna nomes de coluna válidos do DB
-                        // Adicionar tratamento para relacionamentos se necessário (ex: 'relation.field')
                         if (str_contains($dbColumn, '.')) {
-                            // Exemplo básico para relacionamento (pode precisar de joins)
+                            // Relacionamento
                             [$relation, $relatedColumn] = explode('.', $dbColumn, 2);
                             $q->orWhereHas($relation, function ($relationQuery) use ($relatedColumn, $search) {
                                 $relationQuery->where($relatedColumn, 'like', "%{$search}%");
@@ -278,15 +344,12 @@ abstract class AbstractController extends Controller
             }
         }
 
-        // Aplicar ordenação (usando $tableColumns processado)
-        if ($request->has('sort')) {
-            $direction = $request->input('direction', 'asc');
-            $columnKey = $request->input('sort'); // A chave da coluna (accessorKey ou id)
-
+        // 🔥 Aplicar ordenação server-side (melhorado)
+        if ($sortBy && $sortDirection) {
             // Encontrar a definição da coluna solicitada
             $sortColumnDef = null;
             foreach ($tableColumns as $colDef) {
-                if (($colDef['accessorKey'] ?? $colDef['id'] ?? null) === $columnKey) {
+                if (($colDef['accessorKey'] ?? $colDef['id'] ?? null) === $sortBy) {
                     $sortColumnDef = $colDef;
                     break;
                 }
@@ -294,14 +357,13 @@ abstract class AbstractController extends Controller
 
             // Verificar se a coluna existe e está marcada como sortable
             if ($sortColumnDef && ($sortColumnDef['sortable'] ?? false)) {
-                // Usar accessorKey ou id como nome da coluna no DB
                 $dbColumn = $sortColumnDef['accessorKey'] ?? $sortColumnDef['id'] ?? null;
                 if ($dbColumn) {
-                    $query->orderBy($dbColumn, $direction);
+                    $query->orderBy($dbColumn, $sortDirection);
                 }
             }
         } else {
-            // Tentar ordenar pela primeira coluna sortable ou created_at como padrão
+            // Ordenação padrão
             $defaultSortColumn = null;
             foreach ($tableColumns as $colDef) {
                 if ($colDef['sortable'] ?? false) {
@@ -312,12 +374,14 @@ abstract class AbstractController extends Controller
             if ($defaultSortColumn) {
                 $query->orderBy($defaultSortColumn, 'asc');
             } else {
-                $query->latest(); // Fallback para latest()
+                $query->latest();
             }
         }
 
-        $paginator = $query->paginate($perPage)->withQueryString(); 
+        $paginator = $query->paginate($perPage)->withQueryString();
+
         return Inertia::render("{$this->viewPrefix}/index", [
+            // 🔥 Estrutura de dados paginados do Laravel
             'data' => [
                 'data' => $paginator->items(),
                 'meta' => [
@@ -333,14 +397,24 @@ abstract class AbstractController extends Controller
                     'next' => $paginator->nextPageUrl(),
                 ],
             ],
-            'columns' => $tableColumns, // <-- Passar colunas processadas
-            'filters' => $request->only(array_merge(['search', 'sort', 'direction', 'per_page'], array_column($this->getFilters(), 'column'))), // Corrigir 'key' para 'column' aqui?
-            'filterOptions' => $this->getFilters(),
+            'columns' => $tableColumns,
+            'filters' => $request->only(array_merge(['search', 'sort_by', 'sort_direction', 'per_page', 'page'], array_column($filterDefinitions, 'column'))),
+            'filterOptions' => $filterDefinitions,
+
+            // 🔥 Query params atuais para o frontend server-side
+            'currentPage' => $currentPage,
+            'perPage' => $perPage,
+            'search' => $search,
+            'sortBy' => $sortBy,
+            'sortDirection' => $sortDirection,
+            'currentFilters' => $currentFilters,
+
             'pageTitle' => $this->generatePageTitle('index'),
             'pageDescription' => $this->generatePageDescription('index'),
             'breadcrumbs' => $this->generateDefaultBreadcrumbs('index'),
             'routeNameBase' => $this->getRouteNameBase(),
             'actions' => $this->getActions(),
+            'bulkActions' => $this->getBulkActions(),
             'importOptions' => $this->getImportOptions(),
             'can' => [
                 'create_resource' => Gate::allows($this->getSidebarMenuPermission('create')),
@@ -348,7 +422,6 @@ abstract class AbstractController extends Controller
                 'show_resource' => Gate::allows($this->getSidebarMenuPermission('show')),
                 'destroy_resource' => Gate::allows($this->getSidebarMenuPermission('destroy')),
             ],
-            // Adicionar permissões (can) se necessário
         ]);
     }
 
@@ -460,7 +533,7 @@ abstract class AbstractController extends Controller
         } else {
             unset($validatedData['password']); // Remover senha se vazia para não sobrescrever
         }
-         
+
         $modelInstance->update($validatedData);
 
         return redirect()->route($this->getRouteNameBase() . '.index')
@@ -478,6 +551,91 @@ abstract class AbstractController extends Controller
             ->with('success', Str::ucfirst(Str::singular($this->getResourceName())) . ' excluído(a) com sucesso.');
     }
 
+    /**
+     * Processa ações em massa (bulk actions) vindas do frontend.
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function bulkAction(Request $request): RedirectResponse
+    {
+        // Validar dados recebidos
+        $validated = $request->validate([
+            'action' => 'required|string',
+            'selectedIds' => 'required|array|min:1',
+            // 'selectedIds.*' => 'required|integer|exists:' . $this->model::getTableName() . ',id'
+        ]);
+
+        $action = $validated['action'];
+        $selectedIds = $validated['selectedIds'];
+        $count = count($selectedIds);
+
+        // Log da ação para debug
+        Log::info("🔥 Bulk Action executada", [
+            'action' => $action,
+            'selectedIds' => $selectedIds,
+            'count' => $count,
+            'user' => $request->user()->id ?? 'guest'
+        ]);
+
+        $actionName = sprintf('process%s', $action);
+
+        try {
+            // Processar ação baseada no ID
+            if (method_exists($this, $actionName)) {
+                $message = $this->$actionName($selectedIds); 
+                return back()->with('success', $message); 
+            } else {
+                throw new \Exception("Ação bulk '{$action}' não implementada.");
+            }
+        } catch (\Exception $e) {
+            Log::error("❌ Erro ao executar bulk action", [
+                'action' => $action,
+                'selectedIds' => $selectedIds,
+                'error' => $e->getMessage()
+            ]);
+
+            return back()->with('error', 'Erro ao executar ação: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Processa exclusão em massa.
+     */
+    protected function processBulkDelete(array $selectedIds): string
+    {
+        $this->authorize($this->getSidebarMenuPermission('destroy'));
+        $count = count($selectedIds);
+        $this->model::whereIn('id', $selectedIds)->delete();
+        return "{$count} " . ($count === 1 ? 'registro excluído' : 'registros excluídos') . " com sucesso.";
+    }
+
+    /**
+     * Processa arquivamento em massa (soft delete).
+     */
+    protected function processBulkArchive(array $selectedIds): string
+    {
+        $this->authorize($this->getSidebarMenuPermission('destroy'));
+        $count = count($selectedIds);
+        // Verificar se o model suporta soft delete
+        if (!method_exists($this->model, 'bootSoftDeletes')) {
+            throw new \Exception('Model não suporta soft delete para arquivamento.');
+        }
+
+        $this->model::whereIn('id', $selectedIds)->delete();
+        return "{$count} " . ($count === 1 ? 'registro arquivado' : 'registros arquivados') . " com sucesso.";
+    }
+
+    /**
+     * Processa exportação em massa.
+     */
+    protected function processBulkExport(array $selectedIds): string
+    {
+        // TODO: Implementar lógica de exportação
+        // Por enquanto, retornar com mensagem
+        $count = count($selectedIds);
+        return "Exportação de {$count} registros será processada em breve.";
+    }
 
     /**
      * Move um arquivo temporário (identificado pelo seu path no disco local)

@@ -37,4 +37,9 @@ class AbstractModel extends Model
                 ->saveSlugsTo($this->slugTo());
         }
     }
+
+    public static function getTableName()
+    {
+        return (new self())->getTable();
+    }
 }

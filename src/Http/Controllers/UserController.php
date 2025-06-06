@@ -102,9 +102,7 @@ class UserController extends AbstractController
             Column::make('Status', 'status')
                 ->sortable()
                 ->formatter('renderBadge')
-                ->options(UserStatus::variantOptions()),
-
-            Column::actions(),
+                ->options(UserStatus::variantOptions()), 
         ];
     }
 
