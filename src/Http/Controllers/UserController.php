@@ -101,8 +101,20 @@ class UserController extends AbstractController
 
             Column::make('Status', 'status')
                 ->sortable()
-                ->formatter('renderBadge')
-                ->options(UserStatus::variantOptions()), 
+                ->formatBadge([
+                    'mapping' => [
+                        'published' => [
+                            'variant' => 'default',
+                            'color' => 'success',
+                            'label' => 'Publicado',
+                        ],
+                        'draft' => [
+                            'variant' => 'default',
+                            'color' => 'error',
+                            'label' => 'Rascunho',
+                        ],
+                    ]
+                ]), 
         ];
     }
 

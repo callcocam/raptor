@@ -30,7 +30,7 @@ export interface BackendColumn {
   sortable: boolean
   enableHiding: boolean
   formatter?: string
-  formatterOptions?: string
+  formatterOptions?: any
   // 🆕 Propriedades para ações dinâmicas
   component?: string // "Link", "Button", "CustomAction"
   routeNameBase?: string
@@ -189,11 +189,13 @@ const sizeMap = {
 
 // Formatadores comuns
 const formatters = {
-  formatDate: (value: string, options?: string) => {
+  formatDate: (value: string, options?: string | any) => {
     if (!value) return ""
     const date = new Date(value)
-    if (options) {
-      // Parse options like "dd/MM/yyyy HH:mm"
+    
+    // Verificar se options é string (formato simples)
+    if (typeof options === 'string') {
+      // Formato simples como "dd/MM/yyyy HH:mm"
       return new Intl.DateTimeFormat('pt-BR', {
         day: '2-digit',
         month: '2-digit',
@@ -202,6 +204,32 @@ const formatters = {
         minute: '2-digit'
       }).format(date)
     }
+    
+    // Verificar se options é objeto (formato avançado)
+    if (typeof options === 'object' && options !== null) {
+      const { format, locale = 'pt-BR', ...customOptions } = options
+      
+      // Se tem formato personalizado, tentar usar
+      if (format) {
+        // Mapear formatos comuns para Intl.DateTimeFormat
+        const formatMap: Record<string, Intl.DateTimeFormatOptions> = {
+          'dd/MM/yyyy': { day: '2-digit', month: '2-digit', year: 'numeric' },
+          'dd/MM/yyyy HH:mm': { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' },
+          'yyyy-MM-dd': { year: 'numeric', month: '2-digit', day: '2-digit' },
+          'yyyy-MM-dd HH:mm:ss': { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' },
+          'HH:mm': { hour: '2-digit', minute: '2-digit' },
+          'dd/MM': { day: '2-digit', month: '2-digit' }
+        }
+        
+        const formatOptions = formatMap[format] || customOptions
+        return new Intl.DateTimeFormat(locale, formatOptions).format(date)
+      }
+      
+      // Usar opções customizadas diretamente
+      return new Intl.DateTimeFormat(locale, customOptions).format(date)
+    }
+    
+    // Formato padrão brasileiro
     return new Intl.DateTimeFormat('pt-BR').format(date)
   },
 
@@ -213,20 +241,83 @@ const formatters = {
     }).format(value)
   },
 
-  formatBadge: (value: string) => {
+  formatBadge: (value: string, options?: any) => {
     if (!value) return null
-    return <Badge variant="outline">{value}</Badge>
+    
+    // Configurações padrão
+    let badgeProps = {
+      variant: 'default' as any,
+      className: '',
+      children: value
+    }
+    
+    // Se não há opções, usar configuração padrão
+    if (!options) {
+      return <Badge {...badgeProps}>{value}</Badge>
+    }
+    
+    // Se há mapping, verificar se o valor atual tem configuração específica
+    if (options.mapping && typeof options.mapping === 'object') {
+      const mappedConfig = options.mapping[value]
+      if (mappedConfig && typeof mappedConfig === 'object') {
+        // Aplicar configurações do mapping
+        if (mappedConfig.variant) badgeProps.variant = mappedConfig.variant
+        if (mappedConfig.color) {
+          // Mapear cores para classes CSS
+          const colorClasses = {
+            success: 'bg-green-100 text-green-800 hover:bg-green-200',
+            error: 'bg-red-100 text-red-800 hover:bg-red-200',  
+            warning: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200',
+            info: 'bg-blue-100 text-blue-800 hover:bg-blue-200',
+            primary: 'bg-blue-100 text-blue-800 hover:bg-blue-200',
+            secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+          }
+          badgeProps.className += ` ${colorClasses[mappedConfig.color as keyof typeof colorClasses] || ''}`
+        }
+        if (mappedConfig.size) {
+          // Adicionar classes de tamanho se necessário
+          const sizeClasses = {
+            sm: 'text-xs px-2 py-0.5',
+            default: 'text-sm px-2.5 py-0.5', 
+            lg: 'text-base px-3 py-1'
+          }
+          badgeProps.className += ` ${sizeClasses[mappedConfig.size as keyof typeof sizeClasses] || ''}`
+        }
+        
+        return <Badge {...badgeProps}>{mappedConfig.label || value}</Badge>
+      }
+    }
+    
+    // Aplicar configurações diretas (sem mapping)
+    if (options.variant) badgeProps.variant = options.variant
+    if (options.color) {
+      const colorClasses = {
+        success: 'bg-green-100 text-green-800 hover:bg-green-200',
+        error: 'bg-red-100 text-red-800 hover:bg-red-200',
+        warning: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200', 
+        info: 'bg-blue-100 text-blue-800 hover:bg-blue-200',
+        primary: 'bg-blue-100 text-blue-800 hover:bg-blue-200',
+        secondary: 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+      }
+      badgeProps.className += ` ${colorClasses[options.color as keyof typeof colorClasses] || ''}`
+    }
+    if (options.size) {
+      const sizeClasses = {
+        sm: 'text-xs px-2 py-0.5',
+        default: 'text-sm px-2.5 py-0.5',
+        lg: 'text-base px-3 py-1'
+      }
+      badgeProps.className += ` ${sizeClasses[options.size as keyof typeof sizeClasses] || ''}`
+    }
+    
+    return <Badge {...badgeProps}>{value}</Badge>
   },
 
   formatBoolean: (value: boolean) => {
     return value ? "Sim" : "Não"
   }
 }
-
-// 🔥 Função para detectar se é coluna de ação
-const isActionColumn = (col: BackendColumn): boolean => {
-  return !!(col.component || (col.routeNameBase && col.routeSuffix) || col.href)
-}
+ 
 
 // 🔥 Função para renderizar ação dinâmica
 const renderDynamicAction = (col: BackendColumn, row: any) => {
@@ -368,7 +459,7 @@ export function buildColumnsFromBackend<TData = any>(
 
         // Aplicar formatador se especificado
         if (col.formatter && formatters[col.formatter as keyof typeof formatters]) {
-          const formatter = formatters[col.formatter as keyof typeof formatters] as any
+          const formatter = formatters[col.formatter as keyof typeof formatters] as any 
           return formatter(value, col.formatterOptions)
         }
 

@@ -2,20 +2,25 @@
 
 namespace Callcocam\Raptor\Core\Support;
 
+use Callcocam\Raptor\Core\Support\Table\Concerns\HasFormatter;
 use Closure;
+use InvalidArgumentException;  
 
 class Column
 {
+    use HasFormatter;
     public string $id;
     public ?string $accessorKey = null;
     public string $header;
     public bool $sortable = false;
     public bool $enableHiding = true;
-    public ?string $formatter = null;
-    public mixed $formatterOptions = null;
     public ?Closure $cellCallback = null;
     public bool $isHtml = false; // Para indicar se a célula retorna HTML bruto
 
+    /**
+     * @param string $header
+     * @param string|null $accessorKey
+     */
     protected function __construct(string $header, ?string $accessorKey = null)
     {
         $this->header = $header;
@@ -23,11 +28,20 @@ class Column
         $this->id = $this->accessorKey; // ID padrão baseado na chave de acesso
     }
 
+    /**
+     * @param string $header
+     * @param string|null $accessorKey
+     * @return static
+     */
     public static function make(string $header, ?string $accessorKey = null): self
     {
         return new static($header, $accessorKey);
     }
 
+    /**
+     * @param string $id
+     * @return $this
+     */
     public function id(string $id): self
     {
         $this->id = $id;
@@ -38,42 +52,60 @@ class Column
         return $this;
     }
 
+    /**
+     * @param string|null $key
+     * @return $this
+     */
     public function accessorKey(?string $key): self
     {
         $this->accessorKey = $key;
         return $this;
     }
 
+    /**
+     * @param bool $sortable
+     * @return $this
+     */
     public function sortable(bool $sortable = true): self
     {
         $this->sortable = $sortable;
         return $this;
     }
 
+    /**
+     * @param bool $enableHiding
+     * @return $this
+     */
     public function hideable(bool $enableHiding = true): self
     {
         $this->enableHiding = $enableHiding;
         return $this;
     }
 
-    public function formatter(string $formatter): self
-    {
-        $this->formatter = $formatter;
-        return $this;
-    }
-
+    /**
+     * @param mixed $options
+     * @return $this
+     */
     public function options(mixed $options): self
     {
         $this->formatterOptions = $options;
         return $this;
     }
 
+    /**
+     * @param Closure $callback
+     * @return $this
+     */
     public function cell(Closure $callback): self
     {
         $this->cellCallback = $callback;
         return $this;
     }
 
+    /**
+     * @param bool $isHtml
+     * @return $this
+     */
     public function html(bool $isHtml = true): self
     {
         $this->isHtml = $isHtml;
@@ -81,6 +113,9 @@ class Column
     }
 
     // Atalho para a coluna de Ações
+    /**
+     * @return static
+     */
     public static function actions(): self
     {
         return static::make('Ações')
@@ -90,6 +125,9 @@ class Column
             ->hideable(false);
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         $data = [
