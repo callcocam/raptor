@@ -11,6 +11,7 @@ use Callcocam\Raptor\Http\Controllers\UserController;
 use Callcocam\Raptor\Http\Controllers\TenantController;
 use Callcocam\Raptor\Http\Controllers\RoleController;
 use Callcocam\Raptor\Http\Controllers\PermissionController;
+use Callcocam\Raptor\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,10 @@ use Callcocam\Raptor\Http\Controllers\PermissionController;
 */
 
 Route::middleware(['auth', 'verified', 'web'])->prefix('admin')->name('admin.')->group(function () {
-    
+
+    // Rotas para o Dashboard
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
     // Rotas para gerenciamento de Tenants
     Route::resource('tenants', TenantController::class);
     

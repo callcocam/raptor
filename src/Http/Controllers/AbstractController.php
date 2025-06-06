@@ -317,7 +317,7 @@ abstract class AbstractController extends Controller
         }
 
         $paginator = $query->paginate($perPage)->withQueryString(); 
-        return Inertia::render("{$this->viewPrefix}/Index", [
+        return Inertia::render("{$this->viewPrefix}/index", [
             'data' => [
                 'data' => $paginator->items(),
                 'meta' => [
@@ -358,7 +358,7 @@ abstract class AbstractController extends Controller
         // Usar o método processFields
         $fields = $this->processFields();
 
-        return Inertia::render("{$this->viewPrefix}/Create", [
+        return Inertia::render("{$this->viewPrefix}/create", [
             'fields' => $fields,
             'initialValues' => new $this->model(),
             'pageTitle' => $this->generatePageTitle('create'),
@@ -412,7 +412,7 @@ abstract class AbstractController extends Controller
         // Verificar se há campos de upload
 
 
-        return Inertia::render("{$this->viewPrefix}/Edit", [
+        return Inertia::render("{$this->viewPrefix}/edit", [
             'fields' => $fields,
             'initialValues' => $initialValues,
             'modelId' => $id,
